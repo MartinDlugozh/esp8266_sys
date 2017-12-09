@@ -199,10 +199,10 @@ void vEspMain(void *pvParameters)
 	TickType_t pxPreviousWakeTime;
 	uint16_t period = 500;
 
-	pxPreviousWakeTime = xTaskGetTickCount();
-
 	uint8_t wifi_connection = 0;
 	uint8_t server_active = 0;
+
+	pxPreviousWakeTime = xTaskGetTickCount();
 
 	if(esp8266SetMode(ESP8266_MODE_AP))
 	{
@@ -233,33 +233,33 @@ void vEspMain(void *pvParameters)
 					USART1_SEND("Server is ready for incoming connections");
 				}
 			}
-		}else{
-			// TODO: try to move it into the IDLE task
-			// TCP input parser
-			if(esp8266ReadTcpData())
-			{
-				transctions_count++;
-
-				unsigned char c[3];
-				tcp_getdata(c, 2);
-				switch(c[0])
-				{
-				case '+':
-				{
-					led_ppmm(&led_cnt, 1);
-					break;
-				}
-				case '-':
-				{
-					led_ppmm(&led_cnt, 0);
-					break;
-				}
-				default:
-					break;
-				}
-			}
-			// END TCP input parser
 		}
+
+		// TODO: try to move it into the IDLE task
+		// TCP input parser
+		if((server_active == TRUE) && (esp8266ReadTcpData() == TRUE))
+		{
+			transctions_count++;
+
+			unsigned char c[3];
+			tcp_getdata(c, 2);
+			switch(c[0])
+			{
+			case '+':
+			{
+				led_ppmm(&led_cnt, 1);
+				break;
+			}
+			case '-':
+			{
+				led_ppmm(&led_cnt, 0);
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		// END TCP input parser
 
 		vTaskDelayUntil(&pxPreviousWakeTime, period);
 	}while(1);

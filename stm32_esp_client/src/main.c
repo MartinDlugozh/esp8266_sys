@@ -170,6 +170,8 @@ void vEspMain(void *pvParameters)
 	uint8_t wifi_connection = 0;
 	uint8_t server_connection = 0;
 
+	volatile uint32_t reconnection_timer = millis();			// create timer for reconnection (when connection losst)
+
 	pxPreviousWakeTime = xTaskGetTickCount();
 
 //	uart_send_str_ln(USART1, "Trying to connect to the server");
@@ -207,31 +209,49 @@ void vEspMain(void *pvParameters)
 //					uart_send_str_ln(USART1, "..");
 				}
 			}
-		}else{
-			// TODO: try to move it into the IDLE task
-			// TCP input parser
-			if(esp8266ReadTcpData())
-			{
-				unsigned char c[2] = {0, 0};
-				tcp_getdata(c, 2);
-				switch(c[0])
-				{
-				case '+':
-				{
-					led_ppmm(&led_cnt, 1);
-					break;
-				}
-				case '-':
-				{
-					led_ppmm(&led_cnt, 0);
-					break;
-				}
-				default:
-					break;
-				}
-			}
-			// END TCP input parser
 		}
+
+		// TODO: try to move it into the IDLE task
+		// TCP input parser
+		if((server_connection == TRUE) && (esp8266ReadTcpData() == TRUE))
+		{
+			unsigned char c[2] = {0, 0};
+			tcp_getdata(c, 2);
+			switch(c[0])
+			{
+			case '+':
+			{
+				led_ppmm(&led_cnt, 1);
+				break;
+			}
+			case '-':
+			{
+				led_ppmm(&led_cnt, 0);
+				break;
+			}
+			default:
+				break;
+			}
+
+			// Send reconnection command
+			if((millis() - reconnection_timer) >= 10000)
+			{
+				esp8266SetMux(1);
+				if(esp8266TcpConnect(SERVER_ADDRESS, SERVER_PORT, SERVER_CONNECTION) != 0)
+				{
+					USART1_SEND("Server connection updated");
+				}else
+				{
+					wifi_connection = 0;
+					server_connection = 0;
+					period = 500;
+					blinkParam.period = 150;
+					USART1_SEND("Server connection LOST");
+				}
+				reconnection_timer = millis();
+			}
+		}
+		// END TCP input parser
 
 		vTaskDelayUntil(&pxPreviousWakeTime, period);
 	}while(1);
