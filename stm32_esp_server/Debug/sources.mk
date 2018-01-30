@@ -27,7 +27,12 @@ CPP_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+src/FreeRTOS \
+src/UART_freertos \
 src \
+src/ecolog \
+src/i2c \
+src/ssd1306 \
 system/src/cmsis \
 system/src/cortexm \
 system/src/diag \

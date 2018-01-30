@@ -3,7 +3,9 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting/>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -53,6 +55,14 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/UART_freertos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/blue_pill&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ssd1306&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ecolog&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/mavlink_c_ver_2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.1907795528" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -71,6 +81,14 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/UART_freertos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/blue_pill&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ssd1306&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ecolog&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/mavlink_c_ver_2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1076509288" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -89,6 +107,14 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/UART_freertos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/blue_pill&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ssd1306&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ecolog&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/mavlink_c_ver_2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.933419138" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.885238503" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -153,7 +179,56 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762.1150919681" name="/" resourcePath="ESP8266_base">
+						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug.480318419" name="ARM Cross GCC" superClass="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug" unusedChildren="">
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1851188242.936384743" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1851188242"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createlisting.421155605.564612907" name="Create extended listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createlisting.421155605"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.64607906.1974727698" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.64607906"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.993350691.666703814" name="Optimization Level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.993350691"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.messagelength.210436475.1571837980" name="Message length (-fmessage-length=0)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.messagelength.210436475"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.609729818.318317285" name="'char' is signed (-fsigned-char)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.609729818"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.1842600540.163593289" name="Function sections (-ffunction-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.1842600540"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.1069400906.998266021" name="Data sections (-fdata-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.1069400906"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.685740762.798911771" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.685740762"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.1368908153.1218574603" name="Debug format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.1368908153"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.allwarn.1320681426.1308626922" name="Enable all common warnings (-Wall)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.allwarn.1320681426"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.extrawarn.47325002.1330849025" name="Enable extra warnings (-Wextra)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.extrawarn.47325002"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.freestanding.1215435282.767259258" name="Assume freestanding environment (-ffreestanding)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.freestanding.1215435282"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants.1341477112.96411820" name="Disable loop invariant move (-fno-move-loop-invariants)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants.1341477112"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1598773339.2060238025" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1598773339"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.1482277947.893029989" name="Architecture" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.1482277947"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.1178218314.906043763" name="ARM family" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.1178218314"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.100880429.155224415" name="Instruction set" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.100880429"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.136070326.1265135586" name="Prefix" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.136070326"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.767663557.2034580980" name="C compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.767663557"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.cpp.1063795972.1830365057" name="C++ compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.cpp.1063795972"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.ar.15469248.342547491" name="Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.ar.15469248"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.objcopy.204351968.871590721" name="Hex/Bin converter" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.objcopy.204351968"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.objdump.594962769.179685972" name="Listing generator" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.objdump.594962769"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.size.1904866986.587673692" name="Size command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.size.1904866986"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.make.499416904.1470176782" name="Build command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.make.499416904"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.1979289436.1143504059" name="Remove command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.1979289436"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.717067670" name="GNU ARM Cross Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.651360053">
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1559441080" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.2000112055" name="GNU ARM Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.151612673">
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1451735726" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.1554914299" name="GNU ARM Cross C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.613531372">
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.1552451844" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.1885789940" name="GNU ARM Cross C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.100442546"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.1612397714" name="GNU ARM Cross C++ Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.30189972"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.720923675" name="GNU ARM Cross Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.1403221373"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.149705248" name="GNU ARM Cross Create Flash Image" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.983023090"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.2094040407" name="GNU ARM Cross Create Listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.1529399800"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1192178312" name="GNU ARM Cross Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1809959095"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
+						<entry excluding="ssd1306|ESP8266_base|mavlink_c_ver_2|FreeRTOS|include/Tasks|src|system" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="include/Tasks"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
 					</sourceEntries>
@@ -212,6 +287,23 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2/eco_messages}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/FreeRTOS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/mavlink_c_ver_2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ecolog}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ESP8266_base}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/kaktus/eclipse-cpp-neon/workspace_neon/libraries/lib-stm/blue_pill"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/blue_pill&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ecolog&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ESP8266_base&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/mavlink_c_ver_2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ssd1306&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/UART_freertos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.725882348" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NDEBUG"/>
@@ -227,6 +319,23 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2/eco_messages}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/FreeRTOS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/mavlink_c_ver_2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ecolog}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ESP8266_base}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/kaktus/eclipse-cpp-neon/workspace_neon/libraries/lib-stm/blue_pill"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/blue_pill&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ecolog&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ESP8266_base&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/mavlink_c_ver_2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ssd1306&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/UART_freertos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2097092281" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NDEBUG"/>
@@ -242,6 +351,23 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32_esp_server/src/mavlink_c_ver_2/eco_messages}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/FreeRTOS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/mavlink_c_ver_2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ecolog}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ESP8266_base}&quot;"/>
+									<listOptionValue builtIn="false" value="/home/kaktus/eclipse-cpp-neon/workspace_neon/libraries/lib-stm/blue_pill"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/blue_pill&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ecolog&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ESP8266_base&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/FreeRTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/mavlink_c_ver_2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/ssd1306&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/libraries/lib-stm/UART_freertos&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.519760751" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.295524794" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -315,16 +441,22 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="stm32_fuck_esp.ilg.gnuarmeclipse.managedbuild.cross.target.elf.1271723219" name="Executable" projectType="ilg.gnuarmeclipse.managedbuild.cross.target.elf"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.505050474;ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.505050474.;ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.753448563;ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.1253646615">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.505050474;ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.505050474.;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.700958458;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1283751724">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762;ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762.;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.151612673;ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1095515382">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762;ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1790442762.;ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.613531372;ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.193795127">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

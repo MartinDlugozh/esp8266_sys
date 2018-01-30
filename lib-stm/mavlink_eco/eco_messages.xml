@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<mavlink>
+  <include>common.xml</include>
+  <version>3</version>
+  <messages>
+    <message id="190" name="ECO_SYS_STATUS">
+      <description>System specific status data</description>
+      <field type="uint8_t" name="wifi_connection">Wi-Fi conection status</field>
+      <field type="uint8_t[10]" name="sensors">Onboard sensors available</field>
+      <field type="float" name="votage">Onboard power supply voltage [V]</field>
+    </message>
+    <message id="191" name="ECO_BMP180">
+      <description>All data collected from BMP180</description>
+      <field type="float" name="temperature">Temperature from BMP180 sensor [degC]</field>
+      <field type="float" name="altitude">Calculated barometric altitude (abs) [m]</field>
+      <field type="uint32_t" name="presssure">Pressure from BMP180 sensor[pa]</field>
+    </message>
+    <message id="192" name="ECO_MAX44009">
+      <description>All data collected from BMP180</description>
+      <field type="uint32_t" name="lux_ambilight_1">Ambient light from first sensor [lx]</field>
+      <field type="uint32_t" name="lux_ambilight_2">Ambient light from second sensor [lx]</field>
+    </message>
+  </messages>
+</mavlink>
