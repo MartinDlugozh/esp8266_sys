@@ -26,10 +26,6 @@ GLOBAL VARIABLES SECTION
 -----------------------------------------------------------------------------*/
 
 uint16_t transactions_count = 0;
-//
-//float temp = 0;
-//uint32_t press = 0;
-//float alt = 0;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
@@ -44,17 +40,17 @@ ENTRY POINT
 int main(void)
 {
 	blinkParam.period = 150;	// set initial blinking period for onboard LED (BluePill)
-	lcdParam.view = 0;
-	lcdParam.period = 100;
+	lcdParam.view = 0;			// initial LCD view
+	lcdParam.period = 100;		// LCD update period
 
 	/* JTAG-DP Disabled and SW-DP Enabled */
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // needed for use PB3, PB4, PA15
 
-	initRCC();
-	initUSARTs();
-	initBoardButtons();
-	initBluePillLed();
-	led_indicator_init();
+	initRCC();				// system clock source initialization
+	initUSARTs();			// common USART initialization: for debugger and ESP12
+	initBoardButtons();		// "keyboard" initialization
+	initBluePillLed();		// BluePill onboard LED initialization
+	led_indicator_init();	// motherboard led indicator initialization
 	initLCD();
 
 	client_station[0].BMP180_data.temterature = 0;
@@ -63,17 +59,9 @@ int main(void)
 	client_station[0].MAX44009_data.lux_ambilight_1 = 0;
 	client_station[0].MAX44009_data.lux_ambilight_2 = 0;
 
-	// ESP8266 init
+	set_led_status(1);
+	mavlink_enable = 1;
 
-	// ESP8266 init END
-
-//	SSD1306_Init();
-//	SSD1306_Fill(SSD1306_COLOR_BLACK);
-//	SSD1306_GotoXY(30, 0);
-//	SSD1306_Puts("Hello", &Font_11x18, SSD1306_COLOR_WHITE);
-//	SSD1306_UpdateScreen();
-/* ||
-			(pdTRUE != xTaskCreate(vESPCallback,"EC", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, &xESPCallbackHandle))*/
 	if((pdTRUE != xTaskCreate(vBlinker,"Blinker", configMINIMAL_STACK_SIZE, &blinkParam, tskIDLE_PRIORITY + 1, NULL)) ||
 			(pdTRUE != xTaskCreate(vLCD_Update,"LCD", configMINIMAL_STACK_SIZE, &lcdParam, tskIDLE_PRIORITY + 1, NULL)) ||
 			(pdTRUE != xTaskCreate(vButtonsCheck,"Button", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL)) ||
@@ -115,8 +103,8 @@ void vApplicationIdleHook(void)
 					case MAVLINK_MSG_ID_ECO_BMP180:
 					{
 						client_station[(in_msg.sysid - 1)].BMP180_data.temterature = 	mavlink_msg_eco_bmp180_get_temperature(&in_msg);
-						client_station[(in_msg.sysid - 1)].BMP180_data.altitude = 	mavlink_msg_eco_bmp180_get_altitude(&in_msg);
-						client_station[(in_msg.sysid - 1)].BMP180_data.pressure = 	mavlink_msg_eco_bmp180_get_presssure(&in_msg);
+						client_station[(in_msg.sysid - 1)].BMP180_data.altitude = 		mavlink_msg_eco_bmp180_get_altitude(&in_msg);
+						client_station[(in_msg.sysid - 1)].BMP180_data.pressure = 		mavlink_msg_eco_bmp180_get_presssure(&in_msg);
 
 						lcdParam.temp = 	client_station[(in_msg.sysid - 1)].BMP180_data.temterature;
 						lcdParam.alt = 		client_station[(in_msg.sysid - 1)].BMP180_data.altitude;

@@ -61,11 +61,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/ssd1306</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>src/FreeRTOS/FreeRTOS.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/FreeRTOS/FreeRTOS.h</locationURI>
@@ -274,36 +269,6 @@
 			<name>src/mavlink_eco/protocol.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/mavlink_eco/protocol.h</locationURI>
-		</link>
-		<link>
-			<name>src/ssd1306/fonts.c</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/ssd1306/fonts.c</locationURI>
-		</link>
-		<link>
-			<name>src/ssd1306/fonts.h</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/ssd1306/fonts.h</locationURI>
-		</link>
-		<link>
-			<name>src/ssd1306/ssd1306.c</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/ssd1306/ssd1306.c</locationURI>
-		</link>
-		<link>
-			<name>src/ssd1306/ssd1306.h</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/ssd1306/ssd1306.h</locationURI>
-		</link>
-		<link>
-			<name>src/ssd1306/ssd1306_i2c.c</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/ssd1306/ssd1306_i2c.c</locationURI>
-		</link>
-		<link>
-			<name>src/ssd1306/ssd1306_i2c.h</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/ssd1306/ssd1306_i2c.h</locationURI>
 		</link>
 		<link>
 			<name>src/mavlink_eco/common/common.h</name>

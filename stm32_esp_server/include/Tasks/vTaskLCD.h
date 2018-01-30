@@ -56,6 +56,7 @@ void vLCD_Update(void *pvParameters)
 	TickType_t pxPreviousWakeTime;
 	char lcd_buff[16];
 	uint8_t prev_screen = 0;
+	size_t prevlen;
 
 	// Init 16x2 LCD
 	LCDI2C_init(0x3F, 16, 2);
@@ -79,9 +80,7 @@ void vLCD_Update(void *pvParameters)
 			prev_screen = pxTaskParam->view;
 			LCDI2C_clear();
 		}else{
-			LCDI2C_clear_fast(lcd_buff);
 		}
-
 
 		switch(pxTaskParam->view)
 		{
@@ -90,6 +89,8 @@ void vLCD_Update(void *pvParameters)
 			// Display time since boot [ms]
 			memset(lcd_buff, '\0', 16);
 			sprintf(lcd_buff, "MS: %lu", millis());
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_setCursor(0, 0);
 			LCDI2C_write_String(lcd_buff);
 
@@ -106,12 +107,16 @@ void vLCD_Update(void *pvParameters)
 			memset(lcd_buff, '\0', 16);
 			LCDI2C_setCursor(3, 0);
 			ftoa(pxTaskParam->temp, lcd_buff, 1);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_write_String(lcd_buff);
 
 			// Display pressure [pa]
 			memset(lcd_buff, '\0', 16);
 			LCDI2C_setCursor(0, 1);
-			sprintf(lcd_buff, "P %lu", pxTaskParam->press);
+			sprintf(lcd_buff, "P: %lu", pxTaskParam->press);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_write_String(lcd_buff);
 			break;
 		}
@@ -120,12 +125,16 @@ void vLCD_Update(void *pvParameters)
 			// Display 1st ambient light [lx]
 			memset(lcd_buff, '\0', 16);
 			sprintf(lcd_buff, "L1: %lu", pxTaskParam->lux_ambilight_1);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_setCursor(0, 0);
 			LCDI2C_write_String(lcd_buff);
 
 			// Display 2nd ambient light [lx]
 			memset(lcd_buff, '\0', 16);
 			sprintf(lcd_buff, "L2: %lu", pxTaskParam->lux_ambilight_2);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_setCursor(0, 1);
 			LCDI2C_write_String(lcd_buff);
 			break;

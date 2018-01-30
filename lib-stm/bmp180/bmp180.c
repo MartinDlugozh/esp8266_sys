@@ -24,8 +24,8 @@ BMP180_Result_t BMP180_Init() {
 	uint8_t data[22];
 	uint8_t i = 0;
 	
-	/* Initialize I2C */
-	I2C_Initialize(BMP180_I2C, BMP180_I2C_SPEED);
+//	/* Initialize I2C */
+//	I2C_Initialize(BMP180_I2C, BMP180_I2C_SPEED);
 	/* Test if device is connected */
 	if (!I2C_IsDeviceConnected(BMP180_I2C, BMP180_I2C_ADDRESS)) {
 		/* Device is not connected */

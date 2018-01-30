@@ -40,36 +40,34 @@ int main(void)
 	/* JTAG-DP Disabled and SW-DP Enabled */
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // needed for use PB3, PB4, PA15
 
-	initRCC();
-	initUSARTs();
-	initBoardButtons();
-	initBluePillLed();
-	led_indicator_init();
-	set_led_status(0);
+	initRCC();				// system clock source initialization
+	initUSARTs();			// common USART initialization: for debugger and ESP12
+	initBoardButtons();		// "keyboard" initialization
+	initBluePillLed();		// BluePill onboard LED initialization
+	led_indicator_init();	// motherboard led indicator initialization
+	I2C_Initialize(I2C1, 100000);	// init commmon I2C port (same port and speed for BMP180, MAX44009 fbd other digital sensors)
 
 	/* Initialize BMP180 pressure sensor */
 	if (BMP180_Init() == BMP180_Result_Ok) {
-		/* Init OK */
 		BMP180_GetPressureAtSeaLevel(101325, 0);
-		uart_send_str_ln(USART1, "BMP180 configured and ready to use");
+		uart_send_str_ln(USART1, "BMP180 configured and ready to use");				// Init OK
 	} else {
-		/* Device error */
-		uart_send_str_ln(USART1, "BMP180 error");
+		uart_send_str_ln(USART1, "BMP180 error");									// Device error
 		while (1);
 	} /* END BMP180 init */
 
-	// Check if MAX44009 is present
+	/* Initialize MAX44009 ambient light sensor */
 	if (I2C_IsDeviceConnected(MAX44009_I2C_PORT, MAX44009_ADDR_1)) {
-		uart_send_str_ln(USART1, "1st MAX44009 configured and ready to use");
+		uart_send_str_ln(USART1, "1st MAX44009 configured and ready to use");		// Init OK
 	}else{
-		uart_send_str_ln(USART1, "1st MAX44009 error");
+		uart_send_str_ln(USART1, "1st MAX44009 error");								// Device error
 	}
 
 	if (I2C_IsDeviceConnected(MAX44009_I2C_PORT, MAX44009_ADDR_2)) {
-		uart_send_str_ln(USART1, "2nd MAX44009 configured and ready to use");
+		uart_send_str_ln(USART1, "2nd MAX44009 configured and ready to use");		// Init OK
 	}else{
-		uart_send_str_ln(USART1, "2nd MAX44009 error");
-	}
+		uart_send_str_ln(USART1, "2nd MAX44009 error");								// Device error
+	} /* END MAX44009 init */
 
 	set_led_status(1);
 	mavlink_enable = 1;
@@ -112,7 +110,6 @@ void vApplicationIdleHook(void)
 					switch (in_msg.msgid) {
 					case MAVLINK_MSG_ID_HEARTBEAT:
 					{
-//						uart_send_str_ln(USART1, "HEARTBEAT RECEIVED!");
 						station.SERVER_data.last_heartbeat_ms = millis();
 						break;
 					}
@@ -123,7 +120,6 @@ void vApplicationIdleHook(void)
 				i++;
 			}
 		}
-//			status.parse_state = 0;
 		esp8266ClearBuffer();
 		esp8266ClearTcpBuffer();
 		receiveState = 0;

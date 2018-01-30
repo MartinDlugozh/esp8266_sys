@@ -35,6 +35,8 @@ void led_indicator_init(void)
     /* JTAG-DP Disabled and SW-DP Enabled */
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // needed for use PB3, PB4, PA15
 
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+
 	GPIO_InitTypeDef led_gpio;
 
 	GPIO_StructInit(&led_gpio);

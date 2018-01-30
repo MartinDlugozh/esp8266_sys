@@ -32,7 +32,6 @@ src/UART_freertos \
 src \
 src/ecolog \
 src/i2c \
-src/ssd1306 \
 system/src/cmsis \
 system/src/cortexm \
 system/src/diag \

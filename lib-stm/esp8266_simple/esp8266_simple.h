@@ -17,76 +17,80 @@ INCLUDE SECTION
 #include "task.h"
 #include "semphr.h"
 #include "queue.h"
-#include "common_freertos.h"					// Common convinence functions for FreeRTOS
+#include "common_freertos.h"	// Common convinence functions for FreeRTOS
 #include "UART_freertos.h"		// USART convinence functions for FreeRTOS
 
 /*-----------------------------------------------------------------------------
 MACRO SECTION
 -----------------------------------------------------------------------------*/
-#define ESP8266_USART USART2
+// USART used with ESP8266
+#define TRUE 						1
+#define FALSE 						0
+#define ESP8266_USART 				USART2
 
-#define SOCKET_ERROR 1
-#define INVALID_SOCKET 1
+// Socket diagnostic
+#define SOCKET_ERROR 				1
+#define INVALID_SOCKET 				1
 
-#define COMMAND_RESPONSE_TIMEOUT 500
-#define COMMAND_RESPONSE_DELAY 5	// 50
-#define COMMAND_PING_TIMEOUT 3000
-#define WIFI_CONNECT_TIMEOUT 30000
-#define COMMAND_RESET_TIMEOUT 5000
-#define CLIENT_CONNECT_TIMEOUT 5000
+#define ESP8266_RX_BUFFER_LEN 		266
+#define TCP_RX_BUFFER_LEN 			256
 
-#define ESP8266_MAX_SOCK_NUM 5
-#define ESP8266_SOCK_NOT_AVAIL 255
+#define COMMAND_RESPONSE_TIMEOUT 	500
+#define COMMAND_RESPONSE_DELAY 		5
+#define COMMAND_PING_TIMEOUT 		3000
+#define WIFI_CONNECT_TIMEOUT 		30000
+#define COMMAND_RESET_TIMEOUT 		5000
+#define CLIENT_CONNECT_TIMEOUT 		5000
 
-#define TRUE 1
-#define FALSE 0
-
-#define ESP8266_RX_BUFFER_LEN 256	// Number of bytes in the serial receive buffer
-#define TCP_RX_BUFFER_LEN 256
+#define ESP8266_MAX_SOCK_NUM 		5
+#define ESP8266_SOCK_NOT_AVAIL 		255
 
 /*-----------------------------------------------------------------------------
 GLOBAL VARIABLES SECTION
 -----------------------------------------------------------------------------*/
-static const char RESPONSE_PROMPT[] = ">";
-static const char RESPONSE_OK[] = "OK\r\n";
-static const char RESPONSE_ERROR[] = "ERROR\r\n";
-static const char RESPONSE_FAIL[] = "FAIL";
-static const char RESPONSE_READY[] = "READY!";
-static const char RESPONSE_RECEIVED[] = "+IPD,";
-static const char ESP8266_TEST[] = "";	// Test AT startup
-static const char ESP8266_RESET[] = "+RST"; // Restart module
-static const char ESP8266_VERSION[] = "+GMR"; // View version info
-static const char ESP8266_SLEEP[] = "+GSLP"; // Enter deep-sleep mode
-static const char ESP8266_ECHO_ENABLE[] = "E1"; // AT commands echo
-static const char ESP8266_ECHO_DISABLE[] = "E0"; // AT commands echo
-static const char ESP8266_RESTORE[] = "+RESTORE"; // Factory reset
-static const char ESP8266_UART[] = "+UART"; // UART configuration
-static const char ESP8266_WIFI_MODE[] = "+CWMODE"; // WiFi mode (sta/AP/sta+AP)
-static const char ESP8266_CONNECT_AP[] = "+CWJAP"; // Connect to AP
-static const char ESP8266_LIST_AP[] = "+CWLAP"; // List available AP's
-static const char ESP8266_DISCONNECT[] = "+CWQAP"; // Disconnect from AP
-static const char ESP8266_AP_CONFIG[] = "+CWSAP"; // Set softAP configuration
-static const char ESP8266_STATION_IP[] = "+CWLIF"; // List station IP's connected to softAP
-static const char ESP8266_DHCP_EN[] = "+CWDHCP"; // Enable/disable DHCP
-static const char ESP8266_AUTO_CONNECT[] = "+CWAUTOCONN"; // Connect to AP automatically
-static const char ESP8266_SET_STA_MAC[] = "+CIPSTAMAC"; // Set MAC address of station
-static const char ESP8266_GET_STA_MAC[] = "+CIPSTAMAC"; // Get MAC address of station
-static const char ESP8266_SET_AP_MAC[] = "+CIPAPMAC"; // Set MAC address of softAP
-static const char ESP8266_SET_STA_IP[] = "+CIPSTA"; // Set IP address of ESP8266 station
-static const char ESP8266_SET_AP_IP[] = "+CIPAP"; // Set IP address of ESP8266 softAP
-static const char ESP8266_TCP_STATUS[] = "+CIPSTATUS"; // Get connection status
-static const char ESP8266_TCP_CONNECT[] = "+CIPSTART"; // Establish TCP connection or register UDP port
-static const char ESP8266_TCP_SEND[] = "+CIPSENDBUF"; // Send Data
-static const char ESP8266_TCP_CLOSE[] = "+CIPCLOSE"; // Close TCP/UDP connection
-static const char ESP8266_GET_LOCAL_IP[] = "+CIFSR"; // Get local IP address
-static const char ESP8266_TCP_MULTIPLE[] = "+CIPMUX"; // Set multiple connections mode
-static const char ESP8266_SERVER_CONFIG[] = "+CIPSERVER"; // Configure as server
-static const char ESP8266_TRANSMISSION_MODE[] = "+CIPMODE"; // Set transmission mode
-static const char ESP8266_SET_SERVER_TIMEOUT[] = "+CIPSTO"; // Set timeout when ESP8266 runs as TCP server
-static const char ESP8266_PING[] = "+PING"; // Function PING
-static const char ESP8266_PINMODE[] = "+PINMODE"; // Set GPIO mode (input/output)
-static const char ESP8266_PINWRITE[] = "+PINWRITE"; // Write GPIO (high/low)
-static const char ESP8266_PINREAD[] = "+PINREAD"; // Read GPIO digital value
+static const char RESPONSE_PROMPT[] = 			">";
+static const char RESPONSE_OK[] = 				"OK";
+static const char RESPONSE_SEND_OK[] = 			"SEND OK";
+static const char RESPONSE_ERROR[] = 			"ERROR";
+static const char RESPONSE_FAIL[] = 			"FAIL";
+static const char RESPONSE_READY[] = 			"READY!";
+static const char RESPONSE_ALREADY[] = 			"ALREADY";
+static const char RESPONSE_TCP_RECEIVED[] = 	"+IPD,";
+static const char ESP8266_TEST[] = 				"";				// Test AT startup
+static const char ESP8266_AT[] = 				"AT";
+static const char ESP8266_RESET[] = 			"+RST"; 		// Restart module
+static const char ESP8266_VERSION[] = 			"+GMR"; 		// View version info
+static const char ESP8266_SLEEP[] = 			"+GSLP"; 		// Enter deep-sleep mode
+static const char ESP8266_ECHO_ENABLE[] = 		"E1"; 			// AT commands echo
+static const char ESP8266_ECHO_DISABLE[] = 		"E0"; 			// AT commands echo
+static const char ESP8266_RESTORE[] = 			"+RESTORE"; 	// Factory reset
+static const char ESP8266_UART[] = 				"+UART"; 		// UART configuration
+static const char ESP8266_WIFI_MODE[] = 		"+CWMODE"; 		// WiFi mode (sta/AP/sta+AP)
+static const char ESP8266_CONNECT_AP[] = 		"+CWJAP"; 		// Connect to AP
+static const char ESP8266_LIST_AP[] = 			"+CWLAP"; 		// List available AP's
+static const char ESP8266_DISCONNECT[] = 		"+CWQAP"; 		// Disconnect from AP
+static const char ESP8266_AP_CONFIG[] = 		"+CWSAP"; 		// Set softAP configuration
+static const char ESP8266_STATION_IP[] = 		"+CWLIF"; 		// List station IP's connected to softAP
+static const char ESP8266_DHCP_EN[] = 			"+CWDHCP"; 		// Enable/disable DHCP
+static const char ESP8266_AUTO_CONNECT[] = 		"+CWAUTOCONN"; 	// Connect to AP automatically
+static const char ESP8266_SET_STA_MAC[] = 		"+CIPSTAMAC"; 	// Set MAC address of station
+static const char ESP8266_GET_STA_MAC[] = 		"+CIPSTAMAC"; 	// Get MAC address of station
+static const char ESP8266_SET_AP_MAC[] = 		"+CIPAPMAC"; 	// Set MAC address of softAP
+static const char ESP8266_SET_STA_IP[] = 		"+CIPSTA"; 		// Set IP address of ESP8266 station
+static const char ESP8266_SET_AP_IP[] = 		"+CIPAP"; 		// Set IP address of ESP8266 softAP
+static const char ESP8266_TCP_STATUS[] = 		"+CIPSTATUS"; 	// Get connection status
+static const char ESP8266_TCP_CONNECT[] = 		"+CIPSTART"; 	// Establish TCP connection or register UDP port
+static const char ESP8266_TCP_SEND[] = 			"+CIPSENDBUF"; 	// Send Data
+static const char ESP8266_TCP_CLOSE[] = 		"+CIPCLOSE"; 	// Close TCP/UDP connection
+static const char ESP8266_GET_LOCAL_IP[] = 		"+CIFSR"; 		// Get local IP address
+static const char ESP8266_TCP_MULTIPLE[] = 		"+CIPMUX"; 		// Set multiple connections mode
+static const char ESP8266_SERVER_CONFIG[] = 	"+CIPSERVER"; 	// Configure as server
+static const char ESP8266_TRANSMISSION_MODE[] = "+CIPMODE"; 	// Set transmission mode
+static const char ESP8266_SET_SERVER_TIMEOUT[] = "+CIPSTO"; 	// Set timeout when ESP8266 runs as TCP server
+static const char ESP8266_PING[] = 				"+PING"; 		// Function PING
+static const char ESP8266_PINMODE[] = 			"+PINMODE"; 	// Set GPIO mode (input/output)
+static const char ESP8266_PINWRITE[] = 			"+PINWRITE"; 	// Write GPIO (high/low)
+static const char ESP8266_PINREAD[] = 			"+PINREAD"; 	// Read GPIO digital value
 
 typedef enum {
 	ESP8266_CMD_BAD = -5,
@@ -147,7 +151,7 @@ volatile unsigned int tcpBufferHead = 0;
 
 uint8_t receiveState = 0;
 uint8_t payload_len = 0;
-SemaphoreHandle_t xEspSemaphore;
+//SemaphoreHandle_t xEspSemaphore;
 uint8_t transmission_free = 1;
 
 /*-----------------------------------------------------------------------------
@@ -168,7 +172,6 @@ uint8_t esp8266Connect(const char * ssid, const char * pwd);
 uint8_t esp8266TcpConnect(const char* destination, const char* port, const char* link);
 uint8_t esp8266TcpSend(uint8_t *buf, uint16_t size, uint8_t link);
 uint8_t esp8266TcpClose(uint8_t link);
-//uint8_t esp8266ReadTcpData(void);
 uint8_t esp8266ListConectedStaions(void);
 uint8_t esp8266ServerCreate(uint16_t port);
 uint8_t esp8266GetLinkID(void);
@@ -197,7 +200,7 @@ uint8_t esp8266RxBufferAvailable(void)
 void esp8266SendCommand(const char * cmd, esp8266_command_type type, char * params)
 {
 	esp8266ClearBuffer();	// Clear the class receive buffer (esp8266RxBuffer)
-	uart_send_str(ESP8266_USART, "AT");
+	uart_send_str(ESP8266_USART, (char *)ESP8266_AT); // "AT"
 	uart_send_str(ESP8266_USART, (char *)cmd);
 	if (type == ESP8266_CMD_QUERY)
 		uart_send_str(ESP8266_USART, "?");
@@ -335,7 +338,7 @@ uint8_t esp8266Connect(const char * ssid, const char * pwd)
 	if(esp8266SetMode(ESP8266_MODE_STA))
 	{
 		esp8266ClearBuffer();
-		uart_send_str(ESP8266_USART, "AT");
+		uart_send_str(ESP8266_USART, (char *)ESP8266_AT);
 		uart_send_str(ESP8266_USART, (char *)ESP8266_CONNECT_AP);
 		uart_send_str(ESP8266_USART, "=\"");
 		uart_send_str(ESP8266_USART, (char *)ssid);
@@ -358,7 +361,7 @@ uint8_t esp8266TcpConnect(const char* destination, const char* port, const char*
 {
 	uint8_t rsp = FALSE;
 	esp8266ClearBuffer();
-	uart_send_str(ESP8266_USART, "AT");
+	uart_send_str(ESP8266_USART, (char *)ESP8266_AT);
 	uart_send_str(ESP8266_USART, (char *)ESP8266_TCP_CONNECT);
 	uart_send_str(ESP8266_USART, "=");
 	uart_send_str(ESP8266_USART, (char *)link);
@@ -378,7 +381,7 @@ uint8_t esp8266TcpConnect(const char* destination, const char* port, const char*
 	{
 		// We may see "ERROR", but be "ALREADY CONNECTED".
 		// Search for "ALREADY", and return success if we see it.
-		rsp = esp8266SearchBuffer("ALREADY");
+		rsp = esp8266SearchBuffer(RESPONSE_ALREADY);
 		if (rsp)
 			return TRUE;
 		// Otherwise the connection failed. Return the error code:
@@ -393,28 +396,28 @@ uint8_t esp8266TcpSend(uint8_t *buf, uint16_t size, uint8_t link)
 	if(transmission_free == 1){
 		transmission_free = 0;
 		uint8_t rsp = FALSE;
-			uint8_t *p = buf;
-			char params[8];
-			if (size > 2048)
-				return FALSE; //ESP8266_CMD_BAD
-			sprintf(params, "%d,%d", link, size+1);
-			esp8266SendCommand(ESP8266_TCP_SEND, ESP8266_CMD_SETUP, params);
+		uint8_t *p = buf;
+		char params[8];
+		if (size > 2048)
+			return FALSE; //ESP8266_CMD_BAD
+		sprintf(params, "%d,%d", link, size+1);
+		esp8266SendCommand(ESP8266_TCP_SEND, ESP8266_CMD_SETUP, params);
 
-			rsp = esp8266ReadForResponses(RESPONSE_PROMPT, RESPONSE_ERROR, COMMAND_RESPONSE_TIMEOUT);
-			if(rsp)
-			{
-				esp8266ClearBuffer();
-				uart_send_str_n(ESP8266_USART, (char *)p, size);
-				uart_send_byte(ESP8266_USART, '\0');
-				rsp = esp8266ReadForResponse("SEND OK", COMMAND_RESPONSE_TIMEOUT);
-				rsp=1;
-				if (rsp){
-					transmission_free = 1;
-					return TRUE;
-				}
+		rsp = esp8266ReadForResponses(RESPONSE_PROMPT, RESPONSE_ERROR, COMMAND_RESPONSE_TIMEOUT);
+		if(rsp)
+		{
+			esp8266ClearBuffer();
+			uart_send_str_n(ESP8266_USART, (char *)p, size);
+			uart_send_byte(ESP8266_USART, '\0');
+			rsp = esp8266ReadForResponse(RESPONSE_SEND_OK, COMMAND_RESPONSE_TIMEOUT); 	// "SEND OK"
+			rsp=1;
+			if (rsp){
+				transmission_free = 1;
+				return TRUE;
 			}
-			transmission_free = 1;
-			return FALSE;
+		}
+		transmission_free = 1;
+		return FALSE;
 	}
 }
 
@@ -487,7 +490,7 @@ void ESP8266_RxCallBack(char c)
 	{
 	case 0:
 	{
-		if(strstr((const char *)esp8266RxBuffer, "+IPD,") != NULL)
+		if(strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED) != NULL)	//"+IPD,"
 		{
 			receiveState = 1;
 		}
@@ -501,7 +504,7 @@ void ESP8266_RxCallBack(char c)
 			esp8266ClearTcpBuffer();
 
 			char *p;
-			p = strstr((const char *)esp8266RxBuffer, "+IPD,");
+			p = strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED);	//"+IPD,"
 			char strlen[3];
 
 			memcpy(strlen, p+7, (strstr((const char *)esp8266RxBuffer, ":") - (p+7)));
