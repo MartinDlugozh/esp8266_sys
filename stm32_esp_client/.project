@@ -71,6 +71,26 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>src/sht11_drv_sensibus</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_eeprom</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/xfprintf</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/FreeRTOS/FreeRTOS.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/FreeRTOS/FreeRTOS.h</locationURI>
@@ -299,6 +319,66 @@
 			<name>src/max44009_m/max44009_m.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/max44009_m/max44009_m.h</locationURI>
+		</link>
+		<link>
+			<name>src/sht11_drv_sensibus/sht11_drv_sensibus.c</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/sht11_drv_sensibus/sht11_drv_sensibus.c</locationURI>
+		</link>
+		<link>
+			<name>src/sht11_drv_sensibus/sht11_drv_sensibus.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/sht11_drv_sensibus/sht11_drv_sensibus.h</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_eeprom/eeprom.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_eeprom/eeprom.h</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/diskio.c</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/diskio.c</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/diskio.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/diskio.h</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/fattime.c</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/fattime.c</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/fattime.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/fattime.h</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/ff.c</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/ff.c</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/ff.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/ff.h</locationURI>
+		</link>
+		<link>
+			<name>src/stm32f1_fatfs/integer.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/integer.h</locationURI>
+		</link>
+		<link>
+			<name>src/xfprintf/xprintf.c</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/xfprintf/xprintf.c</locationURI>
+		</link>
+		<link>
+			<name>src/xfprintf/xprintf.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/xfprintf/xprintf.h</locationURI>
 		</link>
 		<link>
 			<name>src/mavlink_eco/common/common.h</name>

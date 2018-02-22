@@ -10,7 +10,7 @@
 /*-----------------------------------------------------------------------------
 MACRO SECTION
 -----------------------------------------------------------------------------*/
-#define NUM_VIEWS_MAX 3
+#define NUM_VIEWS_MAX 4
 
 /*-----------------------------------------------------------------------------
 INCLUDE SECTION
@@ -31,6 +31,9 @@ typedef struct LCDUpTaskParam_t {
 	float alt;
 	uint32_t lux_ambilight_1;
 	uint32_t lux_ambilight_2;
+	float sht_temp;
+	float humidity;
+	float dewpoint;
 	uint8_t view;
 	uint32_t period; /* период, миллисекунды*/
 } LCDUpTaskParam;
@@ -94,6 +97,19 @@ void vLCD_Update(void *pvParameters)
 			LCDI2C_setCursor(0, 0);
 			LCDI2C_write_String(lcd_buff);
 
+			// Display SHT11 dew point [degC]
+			memset(lcd_buff, '\0', 16);
+			sprintf(lcd_buff, "D: ");
+			LCDI2C_setCursor(0, 1);
+			LCDI2C_write_String(lcd_buff);
+
+			memset(lcd_buff, '\0', 16);
+			LCDI2C_setCursor(3, 1);
+			ftoa(pxTaskParam->dewpoint, lcd_buff, 2);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
+			LCDI2C_write_String(lcd_buff);
+
 			break;
 		}
 		case 1:
@@ -106,7 +122,7 @@ void vLCD_Update(void *pvParameters)
 
 			memset(lcd_buff, '\0', 16);
 			LCDI2C_setCursor(3, 0);
-			ftoa(pxTaskParam->temp, lcd_buff, 1);
+			ftoa(pxTaskParam->temp, lcd_buff, 2);
 			prevlen = strlen(lcd_buff);
 			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_write_String(lcd_buff);
@@ -136,6 +152,35 @@ void vLCD_Update(void *pvParameters)
 			prevlen = strlen(lcd_buff);
 			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_setCursor(0, 1);
+			LCDI2C_write_String(lcd_buff);
+			break;
+		}
+		case 3:
+		{
+			// Display SHT11 temperature [degC]
+			memset(lcd_buff, '\0', 16);
+			sprintf(lcd_buff, "T: ");
+			LCDI2C_setCursor(0, 0);
+			LCDI2C_write_String(lcd_buff);
+
+			memset(lcd_buff, '\0', 16);
+			LCDI2C_setCursor(3, 0);
+			ftoa(pxTaskParam->sht_temp, lcd_buff, 2);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
+			LCDI2C_write_String(lcd_buff);
+
+			// Display SHT11 humidity [percent]
+			memset(lcd_buff, '\0', 16);
+			sprintf(lcd_buff, "H: ");
+			LCDI2C_setCursor(0, 1);
+			LCDI2C_write_String(lcd_buff);
+
+			memset(lcd_buff, '\0', 16);
+			LCDI2C_setCursor(3, 1);
+			ftoa(pxTaskParam->humidity, lcd_buff, 2);
+			prevlen = strlen(lcd_buff);
+			memset(lcd_buff + prevlen, ' ', 16 - prevlen);
 			LCDI2C_write_String(lcd_buff);
 			break;
 		}

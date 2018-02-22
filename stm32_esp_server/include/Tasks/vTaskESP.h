@@ -66,7 +66,7 @@ void vESP8266Task(void *pvParameters)
 				esp8266SetMux(1);
 				if(esp8266ServerCreate(1500) != 0)	{
 					server_active = 1;
-					blinkParam.period = 500;
+					blinkParam.period = 200;
 					uart_send_str_ln(USART1, "Server is ready for incoming connections");
 				}
 			}

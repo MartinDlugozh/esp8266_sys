@@ -16,6 +16,15 @@
 /*-----------------------------------------------------------------------------
 MACRO SECTION
 -----------------------------------------------------------------------------*/
+
+#ifndef LOW
+#define LOW 0
+#endif
+
+#ifndef HIGH
+#define HIGH 1
+#endif
+
 #define LED_PORT_RED1 		GPIOB
 #define LED_PORT_RED2	 	GPIOB
 #define LED_PORT_GREEN1 	GPIOB
@@ -58,6 +67,10 @@ void toggle_led1(void);
 void toggle_led2(void);
 void toggle_led3(void);
 void toggle_led4(void);
+void set_led1(uint8_t state);
+void set_led2(uint8_t state);
+void set_led3(uint8_t state);
+void set_led4(uint8_t state);
 
 /*-----------------------------------------------------------------------------
 IMPLEMENTATION SECTION

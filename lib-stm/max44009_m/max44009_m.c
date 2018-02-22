@@ -9,13 +9,7 @@
 //   addr - register address
 //   value - new register value
 void MAX44009_WriteReg(uint8_t sensor_addr, uint8_t addr, uint8_t value) {
-//	uint8_t buf[2];
-//
-//	buf[0] = addr;
-//	buf[1] = value;
-//	I2C_Transmit(MAX44009_I2C_PORT, buf, 2, sensor_addr, I2C_GENSTOP_YES);
 	I2C_Write(MAX44009_I2C_PORT, sensor_addr, addr, value);
-//	I2C_WriteMulti(I2C_TypeDef* I2Cx, uint8_t address, uint8_t reg, uint8_t *data, uint16_t count);
 }
 
 // Read value of the MAX44009 register
@@ -26,10 +20,6 @@ void MAX44009_WriteReg(uint8_t sensor_addr, uint8_t addr, uint8_t value) {
 //   register value
 uint8_t MAX44009_ReadReg(uint8_t sensor_addr, uint8_t addr) {
 	uint8_t value = 0;
-
-//	I2C_Transmit(MAX44009_I2C_PORT, &addr, 1, sensor_addr, I2C_GENSTOP_NO);
-//	I2C_Receive(MAX44009_I2C_PORT, &value, 1, sensor_addr);
-//	I2C_Write(MAX44009_I2C_PORT, sensor_addr, addr, '\0');
 	value = I2C_Read(MAX44009_I2C_PORT, sensor_addr, addr);
 
 	return value;

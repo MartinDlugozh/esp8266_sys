@@ -33,6 +33,7 @@
 #include "blue_pill/blue_pill.h"
 #include "mc_indicator.h" 						// ECOLOG motherboard v.0.1a LED indicator
 #include "bmp180/bmp180.h" 						// BMP180 (pressure and temperature sensor) driver
+#include "sht11_drv_sensibus/sht11_drv_sensibus.h"
 #include "esp8266_simple/esp8266_simple.h"
 
 // MAVLink headers
@@ -44,11 +45,13 @@
 #include "mavlink_eco/mavlink_hlp_esp8266.h"
 
 // Tasks
-#include "Tasks/vTaskBlinker.h"
 #include "Tasks/vTaskButtonsCheck.h"
 #include "Tasks/vTaskBMP180Sample.h"
 #include "Tasks/vTaskMAX44009.h"
+#include "Tasks/vTaskSHT11.h"
 #include "Tasks/vTaskDebug.h"
+#include "Tasks/vTaskBlinker.h"
 #include "Tasks/vTaskESP.h"
+#include "Tasks/vTaskSDcard.h"
 
 #endif /* INC_H_ */

@@ -83,6 +83,8 @@ void vESP8266Task(void *pvParameters)
 					server_connection = 1;
 					period = 1000;
 					blinkParam.period = 500;
+				}else{
+					wifi_connection = 0;
 				}
 			}
 		}
@@ -106,6 +108,13 @@ void vESP8266Task(void *pvParameters)
 						station.MAX44009_data.lux_ambilight_1,
 						station.MAX44009_data.lux_ambilight_2);
 				mavlink_send_message_tcp(1, &out_msg);
+
+				mavlink_reset_message(&out_msg);
+				mavlink_msg_eco_sht11_pack(SYS_ID_MY, COM_ID_MY, &out_msg,
+						station.SHT11_data.temperature,
+						station.SHT11_data.humidity,
+						station.SHT11_data.dewpoint);
+				mavlink_send_message_tcp(1, &out_msg);
 			}
 
 			// TODO: maybe, it can be better to use heartbeat for connection diagnostic
@@ -113,7 +122,7 @@ void vESP8266Task(void *pvParameters)
 			if(reconnection_counter >= 5){
 				server_connection = 0;
 				period = 250;
-				blinkParam.period = 100;
+				blinkParam.period = 200;
 			}
 		}
 

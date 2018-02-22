@@ -165,6 +165,7 @@ void toggle_led2(void)
         GPIO_SetBits(LED_PORT_2, LED_PIN_2);
     }
 }
+
 void toggle_led3(void)
 {
     /* Read LED output (GPIOA PIN8) status */
@@ -179,6 +180,7 @@ void toggle_led3(void)
         GPIO_SetBits(LED_PORT_3, LED_PIN_3);
     }
 }
+
 void toggle_led4(void)
 {
     /* Read LED output (GPIOA PIN8) status */
@@ -192,4 +194,80 @@ void toggle_led4(void)
     {
         GPIO_SetBits(LED_PORT_4, LED_PIN_4);
     }
+}
+
+void set_led1(uint8_t state)
+{
+	switch(state)
+	{
+	case LOW:
+	{
+		GPIO_ResetBits(LED_PORT_1, LED_PIN_1);
+		break;
+	}
+	case HIGH:
+	{
+		GPIO_SetBits(LED_PORT_1, LED_PIN_1);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void set_led2(uint8_t state)
+{
+	switch(state)
+	{
+	case LOW:
+	{
+		GPIO_ResetBits(LED_PORT_2, LED_PIN_2);
+		break;
+	}
+	case HIGH:
+	{
+		GPIO_SetBits(LED_PORT_2, LED_PIN_2);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void set_led3(uint8_t state)
+{
+	switch(state)
+	{
+	case LOW:
+	{
+		GPIO_ResetBits(LED_PORT_3, LED_PIN_3);
+		break;
+	}
+	case HIGH:
+	{
+		GPIO_SetBits(LED_PORT_3, LED_PIN_3);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void set_led4(uint8_t state)
+{
+	switch(state)
+	{
+	case LOW:
+	{
+		GPIO_ResetBits(LED_PORT_4, LED_PIN_4);
+		break;
+	}
+	case HIGH:
+	{
+		GPIO_SetBits(LED_PORT_4, LED_PIN_4);
+		break;
+	}
+	default:
+		break;
+	}
 }

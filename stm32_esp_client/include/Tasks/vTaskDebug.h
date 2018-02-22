@@ -32,7 +32,7 @@ GLOBAL VARIABLES SECTION
 /*-----------------------------------------------------------------------------
 HEADER SECTION
 -----------------------------------------------------------------------------*/
-
+void vUSART_debug(void *pvParameters);
 
 /*-----------------------------------------------------------------------------
 IMPLEMENTATION SECTION
@@ -51,20 +51,30 @@ void vUSART_debug(void *pvParameters)
 			char buf[10];
 			uart_send_str(USART1, "TIM: ");
 			uart_send_num(USART1, xTaskGetTickCount());
+
+			uart_send_str(USART1, ", L1: ");
+			uart_send_num(USART1, station.MAX44009_data.lux_ambilight_1);
+
+			uart_send_str(USART1, ", L2: ");
+			uart_send_num(USART1, station.MAX44009_data.lux_ambilight_2);
+
+			uart_send_str(USART1, ", SHT_TMP: ");
+			ftoa(station.SHT11_data.temperature, buf, 3);
+			uart_send_str(USART1, buf);
+
+			uart_send_str(USART1, ", SHT_HUM: ");
+			ftoa(station.SHT11_data.humidity, buf, 3);
+			uart_send_str(USART1, buf);
+
+			uart_send_str(USART1, ", BMP_TMP: ");
+			ftoa(station.BMP180_data.temterature, buf, 3);
+			uart_send_str(USART1, buf);
+
+			uart_send_str(USART1, ", BMP_PRS: ");
+			uart_send_num(USART1, station.BMP180_data.pressure);
+
 			uart_send_str_ln(USART1, "");
 
-			if(xSemaphoreTake(xMutex_BMP180_Data, 0) == pdTRUE){
-				uart_send_str(USART1, " TMP: ");
-				ftoa(BMP180_Data.Temperature, buf, 3);
-				uart_send_str(USART1, buf);
-				uart_send_str_ln(USART1, "");
-
-				uart_send_str(USART1, " PRS: ");
-				uart_send_num(USART1, BMP180_Data.Pressure);
-				uart_send_str_ln(USART1, "");
-
-				xSemaphoreGive(xMutex_BMP180_Data);
-			}
 			xSemaphoreGive(xUsart1RxInterruptSemaphore);
 		}
 

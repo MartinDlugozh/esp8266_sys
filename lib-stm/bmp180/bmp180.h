@@ -51,6 +51,13 @@ extern "C" {
 #define BMP180_PRESSURE_2_DELAY		13
 #define BMP180_PRESSURE_3_DELAY		25
 
+#define BMP180_PRESSURE_MIN			3000
+#define BMP180_PRESSURE_MAX			110000
+#define BMP180_TEMPERATURE_MIN		(-40)
+#define BMP180_TEMPERATURE_MAX		85
+#define BMP180_ALTITUDE_MIN			(-500)
+#define BMP180_ALTITUDE_MAX			9000
+
 /**
  * @}
  */
@@ -90,7 +97,8 @@ typedef struct {
 	uint32_t Pressure;                     /*!< Pressure in pascals */
 	float Temperature;                     /*!< Temperature in degrees */
 	uint16_t Delay;                        /*!< Number of microseconds, that sensor needs to calculate data that you request to */
-	BMP180_Oversampling_t Oversampling; /*!< Oversampling for pressure calculation */
+	BMP180_Oversampling_t Oversampling; 	/*!< Oversampling for pressure calculation */
+	uint8_t health;
 } BMP180_t;
 
 /**

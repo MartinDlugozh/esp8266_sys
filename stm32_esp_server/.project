@@ -981,6 +981,11 @@
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/mavlink_eco/eco_messages/mavlink_msg_eco_max44009.h</locationURI>
 		</link>
 		<link>
+			<name>src/mavlink_eco/eco_messages/mavlink_msg_eco_sht11.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/mavlink_eco/eco_messages/mavlink_msg_eco_sht11.h</locationURI>
+		</link>
+		<link>
 			<name>src/mavlink_eco/eco_messages/mavlink_msg_eco_sys_status.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/mavlink_eco/eco_messages/mavlink_msg_eco_sys_status.h</locationURI>

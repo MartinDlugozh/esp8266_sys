@@ -52,6 +52,14 @@ void vBlinker(void *pvParameters)
 
 	do{
 		onboard_led_toggle();
+		if((BMP180_Data.health != SENSOR_DEAD) &&
+				(MAX44009_Data.health_1 != SENSOR_DEAD) &&
+				(MAX44009_Data.health_2 != SENSOR_DEAD)){
+			set_led4(LOW);
+		}else{
+			set_led4(HIGH);
+		}
+
 		vTaskDelay(pxTaskParam->period);
 	}while(1);
 	vTaskDelete(NULL);

@@ -1,5 +1,7 @@
 /*-----------------------------------------------------------------------------
 *** ESP Communication test program - Client
+***
+*** v.1.6
 -----------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------
@@ -11,7 +13,8 @@ INCLUDE SECTION
 MACRO SECTION
 -----------------------------------------------------------------------------*/
 // OS routine macro. Can be used for debug
-#define	ERROR_ACTION()		do{ }while(1)
+#define	ERROR_ACTION()				{}
+#define	ERROR_ACTION_CRITICAL()		do{ }while(1)
 
 
 
@@ -35,7 +38,8 @@ ENTRY POINT
 -----------------------------------------------------------------------------*/
 int main(void)
 {
-	blinkParam.period = 100;				// set initial blinking period for onboard LED (BluePill)
+	blinkParam.period = 200;				// set initial blinking period for onboard LED (BluePill)
+	sdcardParam.period = 1000;
 
 	/* JTAG-DP Disabled and SW-DP Enabled */
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // needed for use PB3, PB4, PA15
@@ -45,41 +49,74 @@ int main(void)
 	initBoardButtons();		// "keyboard" initialization
 	initBluePillLed();		// BluePill onboard LED initialization
 	led_indicator_init();	// motherboard led indicator initialization
-	I2C_Initialize(I2C1, 100000);	// init commmon I2C port (same port and speed for BMP180, MAX44009 fbd other digital sensors)
+	I2C_Initialize(I2C1, I2C_CLOCK_STANDARD);	// init commmon I2C port (same port and speed for BMP180, MAX44009 and other digital sensors)
+
+	/* Initialize MAX44009 ambient light sensor */
+	if (I2C_IsDeviceConnected(MAX44009_I2C_PORT, MAX44009_ADDR_1)) {
+		MAX44009_Init(MAX44009_ADDR_1);
+		MAX44009_Data.health_1 = SENSOR_OK;
+		FU1_printf("1st MAX44009 configured and ready to use\n", NULL);				// Init OK
+	}else{
+		MAX44009_Data.health_1 = SENSOR_DEAD;
+		FU1_printf("1st MAX44009 error: not present\n", NULL);						// Device error
+		set_led4(HIGH);
+	}
+
+	if (I2C_IsDeviceConnected(MAX44009_I2C_PORT, MAX44009_ADDR_2)) {
+		MAX44009_Init(MAX44009_ADDR_2);
+		MAX44009_Data.health_2 = SENSOR_OK;
+		FU1_printf("2nd MAX44009 configured and ready to use\n", NULL);				// Init OK
+	}else{
+		MAX44009_Data.health_2 = SENSOR_DEAD;
+		FU1_printf("2nd MAX44009 error: not present\n", NULL);						// Device error
+		set_led4(HIGH);
+	} /* END MAX44009 init */
 
 	/* Initialize BMP180 pressure sensor */
 	if (BMP180_Init() == BMP180_Result_Ok) {
 		BMP180_GetPressureAtSeaLevel(101325, 0);
-		uart_send_str_ln(USART1, "BMP180 configured and ready to use");				// Init OK
+		BMP180_Data.health = SENSOR_OK;
+		FU1_printf("BMP180 configured and ready to use\n", NULL);					// Init OK
 	} else {
-		uart_send_str_ln(USART1, "BMP180 error");									// Device error
-		while (1);
+		BMP180_Data.health = SENSOR_DEAD;
+		FU1_printf("BMP180 error\n", NULL);											// Device error
+		set_led4(HIGH);
 	} /* END BMP180 init */
 
-	/* Initialize MAX44009 ambient light sensor */
-	if (I2C_IsDeviceConnected(MAX44009_I2C_PORT, MAX44009_ADDR_1)) {
-		uart_send_str_ln(USART1, "1st MAX44009 configured and ready to use");		// Init OK
-	}else{
-		uart_send_str_ln(USART1, "1st MAX44009 error");								// Device error
-	}
-
-	if (I2C_IsDeviceConnected(MAX44009_I2C_PORT, MAX44009_ADDR_2)) {
-		uart_send_str_ln(USART1, "2nd MAX44009 configured and ready to use");		// Init OK
-	}else{
-		uart_send_str_ln(USART1, "2nd MAX44009 error");								// Device error
-	} /* END MAX44009 init */
 
 	set_led_status(1);
 	mavlink_enable = 1;
 
-	if((pdTRUE != xTaskCreate(vBlinker,"Blinker", configMINIMAL_STACK_SIZE, &blinkParam, tskIDLE_PRIORITY + 1, NULL)) ||
-			(pdTRUE != xTaskCreate(vButtonsCheck,"Button", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL)) ||
-			(pdTRUE != xTaskCreate(vESP8266Task,"ESP", 320, NULL, tskIDLE_PRIORITY + 2, NULL)) ||
-			(pdTRUE != xTaskCreate(vBMP180_sample,"BMP180", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL)) ||
-			(pdTRUE != xTaskCreate(vUSART_debug,"debug", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL)) ||
-			(pdTRUE != xTaskCreate(vMAX44009_sample,"MAX44009", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL)))
-	{
-		ERROR_ACTION();
+	if((pdTRUE != xTaskCreate(vBlinker,"Blinker", configMINIMAL_STACK_SIZE, &blinkParam, tskIDLE_PRIORITY + 2, NULL))) {
+		ERROR_ACTION_CRITICAL();
+	}
+
+	if((pdTRUE != xTaskCreate(vButtonsCheck,"Button", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL))) {
+		ERROR_ACTION_CRITICAL();
+	}
+
+	if((pdTRUE != xTaskCreate(vESP8266Task,"ESP", 320, NULL, tskIDLE_PRIORITY + 2, NULL))) {
+		ERROR_ACTION_CRITICAL();
+	}
+
+	if((pdTRUE != xTaskCreate(vBMP180_sample,"BMP180", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL))) {
+		ERROR_ACTION_CRITICAL();
+	}
+
+	if((pdTRUE != xTaskCreate(vMAX44009_sample,"MAX44009", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL))) {
+		ERROR_ACTION_CRITICAL();
+	}
+
+	if((pdTRUE != xTaskCreate(vSHT11_sample,"SHT11", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL))) {
+		ERROR_ACTION_CRITICAL();
+	}
+
+//	if((pdTRUE != xTaskCreate(vUSART_debug,"debug", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL))) {
+//		ERROR_ACTION_CRITICAL();
+//	}
+
+	if((pdTRUE != xTaskCreate(vTaskSDcard, "SD", configMINIMAL_STACK_SIZE+1024, &sdcardParam, tskIDLE_PRIORITY + 1, NULL)))	{
+		ERROR_ACTION_CRITICAL();
 	}
 
 	vTaskStartScheduler();
@@ -92,7 +129,6 @@ int main(void)
 IMPLEMENTATION SECTION
 -----------------------------------------------------------------------------*/
 
-
 void vApplicationIdleHook(void)
 {
 	if(receiveState == 3)
@@ -101,7 +137,7 @@ void vApplicationIdleHook(void)
 		{
 			uint16_t i = 0;
 			uint16_t received = 0;
-			received = payload_len;	// received = payload_len+1;
+			received = payload_len;
 
 			while((received - i) > 0)
 			{
@@ -126,6 +162,11 @@ void vApplicationIdleHook(void)
 	}
 }
 
+void vApplicationTickHook(void)
+{
+	disk_timerproc();		// SdFAT timer routine
+}
+
 /**
  * USART1_IRQHandler
  */
@@ -137,6 +178,7 @@ void USART1_IRQHandler(void)
     if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
     {
     	USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+    	/*** Some code like this =) ***/
 //    	char c = (char)USART_ReceiveData(USART1) & 0xff;
 
 //    	if(c == '+')

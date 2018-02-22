@@ -8,8 +8,9 @@
 // Accuracy of the Lux value calculation
 //   0: reduced accuracy (slightly faster)
 //   1: maximum accuracy (slightly slower)
-#define MAX44009_ACCURACY                      1
-
+#define MAX44009_ACCURACY                      	1
+#define MAX44009_LUX_MIN 						45
+#define MAX44009_LUX_MAX 						188000000
 
 // MAX44009 HAL
 #define MAX44009_I2C_PORT                      I2C1 // I2C port where the MAX44009 connected

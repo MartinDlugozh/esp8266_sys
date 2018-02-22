@@ -75,15 +75,34 @@ to exclude the API function. */
 #define INCLUDE_eTaskGetState                   0
 #define INCLUDE_xEventGroupSetBitFromISR        0
 #define INCLUDE_xTimerPendFunctionCall          0
-//#define INCLUDE_xTaskAbortDelay					1
-
-
-
 
 // Setup Interrupt Vectors
 #define xPortSysTickHandler SysTick_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define vPortSVCHandler SVC_Handler
+
+/* Assert call defined for debug builds. */
+#ifdef _DEBUG
+	extern void vAssertCalled( const char *pcFile, unsigned long ulLine );
+	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
+#endif /* _DEBUG */
+
+
+
+/* Application specific definitions follow. **********************************/
+
+/* The UDP port to use for incoming command inputs.  The outgoing port is
+set to ( configUDP_CLI_PORT_NUMBER + 1 ). */
+#define configUDP_CLI_PORT_NUMBER	5001
+
+/* The size of the global output buffer that is available for use when there
+are multiple command interpreters running at once (for example, one on a UART
+and one on TCP/IP).  This is done to prevent an output buffer being defined by
+each implementation - which would waste RAM.  In this case, there is only one
+command interpreter running, and it has its own local output buffer, so the
+global buffer is just set to be one byte long as it is not used and should not
+take up unnecessary RAM. */
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 1
 
 #endif /* FREERTOS_CONFIG_H */
 

@@ -1,5 +1,6 @@
 #ifndef UART_H_
 #define UART_H_
+
 #pragma once
 
 /*-----------------------------------------------------------------------------
@@ -42,7 +43,7 @@ INCLUDE SECTION
 #include "stm32f10x_usart.h"
 
 // FreeRTOS includes
-#include "FreeRTOSConfig.h"
+#include "../../../stm32_test_u/include/FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"

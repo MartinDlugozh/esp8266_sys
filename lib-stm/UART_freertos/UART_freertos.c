@@ -86,7 +86,7 @@ char * ftoa(double f, char * buf, int precision)
 	// terminating zero
 	*ptr = 0;
 
-	return buf;
+	return ptr;
 }
 
 //Функция отправляет байт в UART

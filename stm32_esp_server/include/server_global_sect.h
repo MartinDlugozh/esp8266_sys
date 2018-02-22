@@ -50,10 +50,17 @@ typedef struct _MAX44009_data{
 	uint32_t lux_ambilight_2;
 } MAX44009_data_t;
 
+typedef struct _SHT11_data{
+	float 		temperature;
+	float 		humidity;
+	float 		dewpoint;
+} SHT11_data_t;
+
 typedef struct _client_station{
 	HEARTBEAT_data_t 	HEARTBEAT_data;
 	SYSTEMTIME_data_t 	SYSTEMTIME_data;
 	MAX44009_data_t 	MAX44009_data;
+	SHT11_data_t 		SHT11_data;
 	BMP180_data_t 		BMP180_data;
 } client_station_t;
 

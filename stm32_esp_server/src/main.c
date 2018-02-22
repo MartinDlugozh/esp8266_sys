@@ -39,7 +39,7 @@ ENTRY POINT
 -----------------------------------------------------------------------------*/
 int main(void)
 {
-	blinkParam.period = 150;	// set initial blinking period for onboard LED (BluePill)
+	blinkParam.period = 100;	// set initial blinking period for onboard LED (BluePill)
 	lcdParam.view = 0;			// initial LCD view
 	lcdParam.period = 100;		// LCD update period
 
@@ -82,6 +82,7 @@ IMPLEMENTATION SECTION
 
 void vApplicationIdleHook(void)
 {
+	// Here we only parse and process MAVLink messages from the client
 	if(receiveState == 3)
 	{
 		if(mavlink_enable == 1)
@@ -97,7 +98,8 @@ void vApplicationIdleHook(void)
 					switch (in_msg.msgid) {
 					case MAVLINK_MSG_ID_HEARTBEAT:
 					{
-						uart_send_str_ln(USART1, "HEARTBEAT RECEIVED!");
+//						uart_send_str_ln(USART1, "HEARTBEAT RECEIVED!");
+						blinkParam.period = 500;
 						break;
 					}
 					case MAVLINK_MSG_ID_ECO_BMP180:
@@ -110,7 +112,7 @@ void vApplicationIdleHook(void)
 						lcdParam.alt = 		client_station[(in_msg.sysid - 1)].BMP180_data.altitude;
 						lcdParam.press = 	client_station[(in_msg.sysid - 1)].BMP180_data.pressure;
 
-						uart_send_str_ln(USART1, "BMP180 data RECEIVED!");
+//						uart_send_str_ln(USART1, "BMP180 data RECEIVED!");
 
 						break;
 					}
@@ -122,7 +124,21 @@ void vApplicationIdleHook(void)
 						lcdParam.lux_ambilight_1 = 	client_station[(in_msg.sysid - 1)].MAX44009_data.lux_ambilight_1;
 						lcdParam.lux_ambilight_2 = 	client_station[(in_msg.sysid - 1)].MAX44009_data.lux_ambilight_2;
 
-						uart_send_str_ln(USART1, "MAX44009 data RECEIVED!");
+//						uart_send_str_ln(USART1, "MAX44009 data RECEIVED!");
+
+						break;
+					}
+					case MAVLINK_MSG_ID_ECO_SHT11:
+					{
+						client_station[(in_msg.sysid - 1)].SHT11_data.temperature = mavlink_msg_eco_sht11_get_temperature(&in_msg);
+						client_station[(in_msg.sysid - 1)].SHT11_data.humidity = mavlink_msg_eco_sht11_get_humidity(&in_msg);
+						client_station[(in_msg.sysid - 1)].SHT11_data.dewpoint = mavlink_msg_eco_sht11_get_dowpoint(&in_msg);
+
+						lcdParam.sht_temp = client_station[(in_msg.sysid - 1)].SHT11_data.temperature;
+						lcdParam.humidity = client_station[(in_msg.sysid - 1)].SHT11_data.humidity;
+						lcdParam.dewpoint = client_station[(in_msg.sysid - 1)].SHT11_data.dewpoint;
+
+//						uart_send_str_ln(USART1, "SHT11 data RECEIVED!");
 
 						break;
 					}

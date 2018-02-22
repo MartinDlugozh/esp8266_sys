@@ -30,7 +30,7 @@ INCLUDE SECTION
 /*-----------------------------------------------------------------------------
 GLOBAL VARIABLES SECTION
 -----------------------------------------------------------------------------*/
-#define BOARD_SERVICE_BUTTON_PIN		GPIO_Pin_11
+#define BOARD_SERVICE_BUTTON_PIN		GPIO_Pin_1
 #define BOARD_SERVICE_BUTTON_PORT		GPIOB
 
 /*-----------------------------------------------------------------------------

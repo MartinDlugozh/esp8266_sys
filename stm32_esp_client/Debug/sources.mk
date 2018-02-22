@@ -34,6 +34,9 @@ src/bmp180 \
 src/ecolog \
 src/i2c \
 src/max44009_m \
+src/sht11_drv_sensibus \
+src/stm32f1_fatfs \
+src/xfprintf \
 system/src/cmsis \
 system/src/cortexm \
 system/src/diag \
