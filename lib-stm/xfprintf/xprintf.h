@@ -5,8 +5,6 @@
 #ifndef _STRFUNC
 #define _STRFUNC
 
-#define XPRINTF_USART 	USART1
-
 #define _USE_XFUNC_OUT	1	/* 1: Use output functions */
 #define	_CR_CRLF		1	/* 1: Convert \n ==> \r\n in the output char */
 
@@ -15,6 +13,8 @@
 
 
 #if _USE_XFUNC_OUT
+void usart_dma_start(void);
+void usart_dma_send(void);
 #define xdev_out(func) xfunc_out = (void(*)(unsigned char))(func)
 extern void (*xfunc_out)(unsigned char);
 void xputc (char c);

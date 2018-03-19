@@ -19,7 +19,8 @@ MACRO SECTION
 #define SERVER_PORT			"1500"
 #define SERVER_CONNECTION 	"1"
 
-#define CONNECTION_LOSS_TIMEOUT 10000
+#define ESP_TASK_PERIOD_SHORT 		200
+#define ESP_TASK_PERIOD_LONG 		1000
 
 /*-----------------------------------------------------------------------------
 INCLUDE SECTION
@@ -31,13 +32,22 @@ INCLUDE SECTION
 #include "semphr.h"
 #include "queue.h"
 #include "common_freertos.h"					// Common convinence functions for FreeRTOS
-#include "UART_freertos.h"		// USART convinence functions for FreeRTOS
+#include "usart_freertos.h"		// USART convinence functions for FreeRTOS
 #include "esp8266_simple.h"
 
 /*-----------------------------------------------------------------------------
 GLOBAL VARIABLES SECTION
 -----------------------------------------------------------------------------*/
+TaskHandle_t xTaskHandleESP;
 
+typedef enum{
+	CONN_UNUNIT = 0,
+	CONN_WIFI,
+	CONN_AP_ACT,
+	CONN_AP_CON,
+	CONN_SERVER,
+	CONN_CLIENT,
+}ESP8266_ConnState_t;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
@@ -51,54 +61,48 @@ IMPLEMENTATION SECTION
 void vESP8266Task(void *pvParameters)
 {
 	TickType_t pxPreviousWakeTime;
-	uint16_t period = 250;
+	uint16_t period = ESP_TASK_PERIOD_SHORT;
 
-	uint8_t wifi_connection = 0;
-	uint8_t server_connection = 0;
+	uint8_t esp_comnn_state = 0;
+	uint8_t esp_result = 0;
+
 	uint8_t reconnection_counter = 0;
+
+	blinkParam.period = 200;
+	mavlink_enable = 1;
+
+	vTaskDelay(2000);
 
 	pxPreviousWakeTime = xTaskGetTickCount();
 	do{
-//		if((millis() - station.SERVER_data.last_heartbeat_ms) >= CONNECTION_LOSS_TIMEOUT)
-//		{
-//			server_connection = 0;
-//			wifi_connection = 0;
-//		}
-
-		if(!server_connection)
-		{
-			if(!wifi_connection)
-			{
-				if(esp8266Connect(WIFINAME, WIFIPASS) != 0)
-				{
-					wifi_connection = 1;
-				}else{
-				}
+		switch(esp_comnn_state){
+		case CONN_UNUNIT:		// Wi-Fi module uninitialized; connect to AP first
+			if((esp_result = esp8266Connect(WIFINAME, WIFIPASS)) == ESP_OK){
+				esp_comnn_state = CONN_WIFI;
+				DEBUG_printf("WIFI connected\n", NULL);
 			}
-			if(wifi_connection && !server_connection)
-			{
-				esp8266SetMux(1);
-				if(esp8266TcpConnect(SERVER_ADDRESS, SERVER_PORT, SERVER_CONNECTION) != 0)
-				{
-					server_connection = 1;
-					period = 1000;
+			break;
+		case CONN_WIFI:
+			if((esp_result = esp8266SetTrans(0) == ESP_OK)){
+				DEBUG_printf("Transparent mode off\n", NULL);
+			}
+			if((esp_result = esp8266SetMux(1)) == ESP_OK){
+				DEBUG_printf("Set MUX\n", NULL);
+				if((esp_result = esp8266TcpConnect(SERVER_ADDRESS, SERVER_PORT, SERVER_CONNECTION)) == ESP_OK){
+					esp_comnn_state = CONN_CLIENT;
 					blinkParam.period = 500;
-				}else{
-					wifi_connection = 0;
+					DEBUG_printf("Connected to TCP server\n", NULL);
 				}
 			}
-		}
-
-		// Send collected data to the srver
-		if(server_connection == TRUE)
-		{
-			if(mavlink_enable == 1){
+			break;
+		case CONN_CLIENT:
+			if(mavlink_enable == 1){ 		// Send telemetry, if enabled
 				heartbeat_send(1, &out_msg);
 				systime_send(1, &out_msg, millis());
 
 				mavlink_reset_message(&out_msg);
 				mavlink_msg_eco_bmp180_pack(SYS_ID_MY, COM_ID_MY, &out_msg,
-						station.BMP180_data.temterature,
+						station.BMP180_data.temperature,
 						station.BMP180_data.altitude,
 						station.BMP180_data.pressure);
 				mavlink_send_message_tcp(1, &out_msg);
@@ -117,16 +121,18 @@ void vESP8266Task(void *pvParameters)
 				mavlink_send_message_tcp(1, &out_msg);
 			}
 
-			// TODO: maybe, it can be better to use heartbeat for connection diagnostic
-			reconnection_counter++;
 			if(reconnection_counter >= 5){
-				server_connection = 0;
-				period = 250;
+				esp_comnn_state = CONN_UNUNIT;
+				period = ESP_TASK_PERIOD_SHORT;
 				blinkParam.period = 200;
 			}
+			break;
+		default:
+			break;
 		}
 
 		vTaskDelayUntil(&pxPreviousWakeTime, period);
+		uxHighWaterMark[HIGH_WATERMARK_ESP8266] = uxTaskGetStackHighWaterMark(NULL);	// get free stack memory
 	}while(1);
 	vTaskDelete(NULL);
 }

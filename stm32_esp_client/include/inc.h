@@ -25,7 +25,7 @@
 #include "semphr.h"
 #include "queue.h"
 #include "common_freertos.h"					// Common convinence functions for FreeRTOS
-#include "UART_freertos/UART_freertos.h"		// USART convinence functions for FreeRTOS
+#include "usart_freertos.h"		// USART convinence functions for FreeRTOS
 
 #include "client_global_sect.h"
 
@@ -34,7 +34,7 @@
 #include "mc_indicator.h" 						// ECOLOG motherboard v.0.1a LED indicator
 #include "bmp180/bmp180.h" 						// BMP180 (pressure and temperature sensor) driver
 #include "sht11_drv_sensibus/sht11_drv_sensibus.h"
-#include "esp8266_simple/esp8266_simple.h"
+#include "esp8266_simple.h"
 
 // MAVLink headers
 #include "mavlink_eco/eco_messages/mavlink.h"

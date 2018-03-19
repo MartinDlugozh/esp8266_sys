@@ -25,9 +25,8 @@
 #include "semphr.h"
 #include "queue.h"
 #include "common_freertos.h"					// Common convinence functions for FreeRTOS
-#include "UART_freertos.h"		// USART convinence functions for FreeRTOS
-
-#include "server_global_sect.h"
+#include "usart_freertos.h"		// USART convinence functions for FreeRTOS
+#include "xfprintf/xprintf.h"
 
 // Drivers
 #include "blue_pill.h"
@@ -35,6 +34,9 @@
 #include "LiquidCrystal_I2C.h"
 #include "mc_indicator.h" 			// ECOLOG motherboard v.0.1a LED indicator
 #include "esp8266_simple.h"
+//#include "esp8266.h"
+
+#include "server_global_sect.h"
 
 // MAVLink headers
 #include "./mavlink_eco/eco_messages/mavlink.h"
@@ -44,11 +46,11 @@
 #include "./mavlink_eco/mavlink_types.h"
 #include "./mavlink_eco/mavlink_hlp_esp8266.h"
 
-
 // Tasks
 #include "Tasks/vTaskBlinker.h"
 #include "Tasks/vTaskLCD.h"
 #include "Tasks/vTaskButtonsCheck.h"
 #include "Tasks/vTaskESP.h"
+#include "Tasks/vTaskSDcard.h"
 
 #endif /* INC_H_ */

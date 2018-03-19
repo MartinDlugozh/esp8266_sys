@@ -260,10 +260,11 @@ static void mavlink_test_eco_file_request(uint8_t system_id, uint8_t component_i
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
     mavlink_eco_file_request_t packet_in = {
-        5,72,139
+        17235,139,206,17
     };
     mavlink_eco_file_request_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
+        packet1.log_id = packet_in.log_id;
         packet1.target_system = packet_in.target_system;
         packet1.log_type = packet_in.log_type;
         packet1.op_type = packet_in.op_type;
@@ -281,12 +282,12 @@ static void mavlink_test_eco_file_request(uint8_t system_id, uint8_t component_i
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_eco_file_request_pack(system_id, component_id, &msg , packet1.target_system , packet1.log_type , packet1.op_type );
+    mavlink_msg_eco_file_request_pack(system_id, component_id, &msg , packet1.target_system , packet1.log_id , packet1.log_type , packet1.op_type );
     mavlink_msg_eco_file_request_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_eco_file_request_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.target_system , packet1.log_type , packet1.op_type );
+    mavlink_msg_eco_file_request_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.target_system , packet1.log_id , packet1.log_type , packet1.op_type );
     mavlink_msg_eco_file_request_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -299,7 +300,7 @@ static void mavlink_test_eco_file_request(uint8_t system_id, uint8_t component_i
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_eco_file_request_send(MAVLINK_COMM_1 , packet1.target_system , packet1.log_type , packet1.op_type );
+    mavlink_msg_eco_file_request_send(MAVLINK_COMM_1 , packet1.target_system , packet1.log_id , packet1.log_type , packet1.op_type );
     mavlink_msg_eco_file_request_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }

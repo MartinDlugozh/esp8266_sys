@@ -915,6 +915,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			return errQUEUE_FULL;
 		}
 	}
+	return pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
@@ -1428,6 +1429,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			}
 		}
 	}
+	return pdFAIL;
 }
 /*-----------------------------------------------------------*/
 

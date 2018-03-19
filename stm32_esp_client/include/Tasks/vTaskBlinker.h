@@ -29,6 +29,7 @@ typedef struct BlinkTaskParam_t {	// blink task parameters
 } BlinkTaskParam;
 
 BlinkTaskParam blinkParam;
+TaskHandle_t xTaskHandleBlinker;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
@@ -52,15 +53,16 @@ void vBlinker(void *pvParameters)
 
 	do{
 		onboard_led_toggle();
-		if((BMP180_Data.health != SENSOR_DEAD) &&
-				(MAX44009_Data.health_1 != SENSOR_DEAD) &&
-				(MAX44009_Data.health_2 != SENSOR_DEAD)){
-			set_led4(LOW);
-		}else{
-			set_led4(HIGH);
-		}
+//		if((BMP180_Data.health != SENSOR_DEAD) &&
+//				(MAX44009_Data.health_1 != SENSOR_DEAD) &&
+//				(MAX44009_Data.health_2 != SENSOR_DEAD)){
+//			set_led4(LOW);
+//		}else{
+//			set_led4(HIGH);
+//		}
 
 		vTaskDelay(pxTaskParam->period);
+		uxHighWaterMark[HIGH_WATERMARK_BLINKER] = uxTaskGetStackHighWaterMark(NULL);
 	}while(1);
 	vTaskDelete(NULL);
 }

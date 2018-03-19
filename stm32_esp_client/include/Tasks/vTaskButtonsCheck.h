@@ -12,6 +12,9 @@
 MACRO SECTION
 -----------------------------------------------------------------------------*/
 
+#define BOARD_BUTTON_SERVICE_PIN		GPIO_Pin_1
+#define BOARD_SERVICE_BUTTON_PORT		GPIOB
+
 /*-----------------------------------------------------------------------------
 INCLUDE SECTION
 -----------------------------------------------------------------------------*/
@@ -26,12 +29,12 @@ INCLUDE SECTION
 #include "task.h"
 #include "blue_pill/blue_pill.h"
 //#include "esp8266_simple.h"			// Simple ESP8266 driver
+#include "Tasks/vTaskDebug.h"
 
 /*-----------------------------------------------------------------------------
 GLOBAL VARIABLES SECTION
 -----------------------------------------------------------------------------*/
-#define BOARD_SERVICE_BUTTON_PIN		GPIO_Pin_1
-#define BOARD_SERVICE_BUTTON_PORT		GPIOB
+TaskHandle_t xTaskHandleBtnCheck;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
@@ -52,7 +55,7 @@ void initBoardButtons(void)
 	GPIO_StructInit(&gpio);
 	gpio.GPIO_Mode = GPIO_Mode_IPD;
 	gpio.GPIO_Speed = GPIO_Speed_2MHz;
-	gpio.GPIO_Pin = BOARD_SERVICE_BUTTON_PIN;
+	gpio.GPIO_Pin = BOARD_BUTTON_SERVICE_PIN;
 	GPIO_Init(BOARD_SERVICE_BUTTON_PORT, &gpio);
 }
 
@@ -81,7 +84,7 @@ void vButtonsCheck(void *pvParameters)
 	pxPreviousWakeTime = xTaskGetTickCount();
 	do{
 		btn_state_prev = btn_state_curr;		// shift current state to previous
-		btn_state_curr = GPIO_ReadInputDataBit(BOARD_SERVICE_BUTTON_PORT, BOARD_SERVICE_BUTTON_PIN);		// get new state
+		btn_state_curr = GPIO_ReadInputDataBit(BOARD_SERVICE_BUTTON_PORT, BOARD_BUTTON_SERVICE_PIN);		// get new state
 		if((btn_state_curr != 0) && (btn_state_curr != btn_state_prev))	// if state had changed to "PRESSED"
 		{
 			period = 400;		// change checking period (debounce)
@@ -94,6 +97,7 @@ void vButtonsCheck(void *pvParameters)
 		}
 
 		vTaskDelayUntil(&pxPreviousWakeTime, period);
+		uxHighWaterMark[HIGH_WATERMARK_BUTTONC] = uxTaskGetStackHighWaterMark(NULL);
 	}while(1);
 	vTaskDelete(NULL);
 }

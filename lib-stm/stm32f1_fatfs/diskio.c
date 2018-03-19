@@ -5,6 +5,7 @@
 #include "stm32f10x_spi.h"
 
 #include "diskio.h"
+
 // demo uses a command line option for this (see Makefile):
 
 #define STM32_USE_DMA 1
@@ -167,7 +168,7 @@ BYTE wait_ready (void)
 	BYTE res;
 
 
-	Timer2 = 50;	/* Wait for ready in timeout of 500ms */
+	Timer2 = 500;	/* Wait for ready in timeout of 500ms */
 	rcvr_spi();
 	do
 		res = rcvr_spi();
@@ -304,7 +305,7 @@ void power_on (void)
 
 	PWR_ON();
 
-	for (Timer1 = 25; Timer1; );	/* Wait for 250ms */
+//	for (Timer1 = 250; Timer1; );	/* Wait for 250ms */
 
 	/* Configure I/O for Flash Chip select */
 	GPIO_InitStructure.GPIO_Pin = DISKIO_PIN_CS;
@@ -404,7 +405,7 @@ BOOL rcvr_datablock (
 	BYTE token;
 
 
-	Timer1 = 10;
+	Timer1 = 100;
 	do {							/* Wait for data packet in timeout of 100ms */
 		token = rcvr_spi();
 	} while ((token == 0xFF) && Timer1);
@@ -547,7 +548,7 @@ DSTATUS disk_initialize (
 
 	ty = 0;
 	if (send_cmd(CMD0, 0) == 1) {			/* Enter Idle state */
-		Timer1 = 100;						/* Initialization timeout of 1000 msec */
+		Timer1 = 1000;						/* Initialization timeout of 1000 msec */
 		if (send_cmd(CMD8, 0x1AA) == 1) {	/* SDHC */
 			for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();		/* Get trailing return value of R7 resp */
 			if (ocr[2] == 0x01 && ocr[3] == 0xAA) {				/* The card can work at vdd range of 2.7-3.6V */

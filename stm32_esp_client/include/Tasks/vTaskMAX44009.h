@@ -41,6 +41,8 @@ MAX44009_t MAX44009_Data;
 SemaphoreHandle_t xMutex_MAX44009_Data;
 uint8_t MAX44009_check_cnt = 0;
 
+TaskHandle_t xTaskHandleMAX44009Sample;
+
 /*-----------------------------------------------------------------------------
 HEADER SECTION
 -----------------------------------------------------------------------------*/
@@ -95,6 +97,7 @@ void vMAX44009_sample(void *pvParameters)
 		}
 
 		vTaskDelayUntil(&pxPreviousWakeTime, MAX44009_SAMPLING_PERIOD);
+		uxHighWaterMark[HIGH_WATERMARK_MAXAMBI] = uxTaskGetStackHighWaterMark(NULL);
 	}while(1);
 	vTaskDelete(NULL);
 }

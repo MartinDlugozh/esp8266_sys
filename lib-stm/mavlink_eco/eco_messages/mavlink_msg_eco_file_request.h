@@ -5,18 +5,19 @@
 
 MAVPACKED(
 typedef struct __mavlink_eco_file_request_t {
+ uint16_t log_id; /*< Log id [0..UINT16_MAX]. If zero - no files present*/
  uint8_t target_system; /*< Target slave system  */
  uint8_t log_type; /*< Log type [continious/daily/all...]*/
  uint8_t op_type; /*< Operation type [download/delete/list]*/
 }) mavlink_eco_file_request_t;
 
-#define MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN 3
-#define MAVLINK_MSG_ID_ECO_FILE_REQUEST_MIN_LEN 3
-#define MAVLINK_MSG_ID_200_LEN 3
-#define MAVLINK_MSG_ID_200_MIN_LEN 3
+#define MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN 5
+#define MAVLINK_MSG_ID_ECO_FILE_REQUEST_MIN_LEN 5
+#define MAVLINK_MSG_ID_200_LEN 5
+#define MAVLINK_MSG_ID_200_MIN_LEN 5
 
-#define MAVLINK_MSG_ID_ECO_FILE_REQUEST_CRC 36
-#define MAVLINK_MSG_ID_200_CRC 36
+#define MAVLINK_MSG_ID_ECO_FILE_REQUEST_CRC 124
+#define MAVLINK_MSG_ID_200_CRC 124
 
 
 
@@ -24,19 +25,21 @@ typedef struct __mavlink_eco_file_request_t {
 #define MAVLINK_MESSAGE_INFO_ECO_FILE_REQUEST { \
     200, \
     "ECO_FILE_REQUEST", \
-    3, \
-    {  { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_eco_file_request_t, target_system) }, \
-         { "log_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 1, offsetof(mavlink_eco_file_request_t, log_type) }, \
-         { "op_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_eco_file_request_t, op_type) }, \
+    4, \
+    {  { "log_id", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_eco_file_request_t, log_id) }, \
+         { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_eco_file_request_t, target_system) }, \
+         { "log_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 3, offsetof(mavlink_eco_file_request_t, log_type) }, \
+         { "op_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 4, offsetof(mavlink_eco_file_request_t, op_type) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_ECO_FILE_REQUEST { \
     "ECO_FILE_REQUEST", \
-    3, \
-    {  { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_eco_file_request_t, target_system) }, \
-         { "log_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 1, offsetof(mavlink_eco_file_request_t, log_type) }, \
-         { "op_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_eco_file_request_t, op_type) }, \
+    4, \
+    {  { "log_id", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_eco_file_request_t, log_id) }, \
+         { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_eco_file_request_t, target_system) }, \
+         { "log_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 3, offsetof(mavlink_eco_file_request_t, log_type) }, \
+         { "op_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 4, offsetof(mavlink_eco_file_request_t, op_type) }, \
          } \
 }
 #endif
@@ -48,22 +51,25 @@ typedef struct __mavlink_eco_file_request_t {
  * @param msg The MAVLink message to compress the data into
  *
  * @param target_system Target slave system  
+ * @param log_id Log id [0..UINT16_MAX]. If zero - no files present
  * @param log_type Log type [continious/daily/all...]
  * @param op_type Operation type [download/delete/list]
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_eco_file_request_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint8_t target_system, uint8_t log_type, uint8_t op_type)
+                               uint8_t target_system, uint16_t log_id, uint8_t log_type, uint8_t op_type)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN];
-    _mav_put_uint8_t(buf, 0, target_system);
-    _mav_put_uint8_t(buf, 1, log_type);
-    _mav_put_uint8_t(buf, 2, op_type);
+    _mav_put_uint16_t(buf, 0, log_id);
+    _mav_put_uint8_t(buf, 2, target_system);
+    _mav_put_uint8_t(buf, 3, log_type);
+    _mav_put_uint8_t(buf, 4, op_type);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN);
 #else
     mavlink_eco_file_request_t packet;
+    packet.log_id = log_id;
     packet.target_system = target_system;
     packet.log_type = log_type;
     packet.op_type = op_type;
@@ -82,23 +88,26 @@ static inline uint16_t mavlink_msg_eco_file_request_pack(uint8_t system_id, uint
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param target_system Target slave system  
+ * @param log_id Log id [0..UINT16_MAX]. If zero - no files present
  * @param log_type Log type [continious/daily/all...]
  * @param op_type Operation type [download/delete/list]
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_eco_file_request_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint8_t target_system,uint8_t log_type,uint8_t op_type)
+                                   uint8_t target_system,uint16_t log_id,uint8_t log_type,uint8_t op_type)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN];
-    _mav_put_uint8_t(buf, 0, target_system);
-    _mav_put_uint8_t(buf, 1, log_type);
-    _mav_put_uint8_t(buf, 2, op_type);
+    _mav_put_uint16_t(buf, 0, log_id);
+    _mav_put_uint8_t(buf, 2, target_system);
+    _mav_put_uint8_t(buf, 3, log_type);
+    _mav_put_uint8_t(buf, 4, op_type);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN);
 #else
     mavlink_eco_file_request_t packet;
+    packet.log_id = log_id;
     packet.target_system = target_system;
     packet.log_type = log_type;
     packet.op_type = op_type;
@@ -120,7 +129,7 @@ static inline uint16_t mavlink_msg_eco_file_request_pack_chan(uint8_t system_id,
  */
 static inline uint16_t mavlink_msg_eco_file_request_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_eco_file_request_t* eco_file_request)
 {
-    return mavlink_msg_eco_file_request_pack(system_id, component_id, msg, eco_file_request->target_system, eco_file_request->log_type, eco_file_request->op_type);
+    return mavlink_msg_eco_file_request_pack(system_id, component_id, msg, eco_file_request->target_system, eco_file_request->log_id, eco_file_request->log_type, eco_file_request->op_type);
 }
 
 /**
@@ -134,7 +143,7 @@ static inline uint16_t mavlink_msg_eco_file_request_encode(uint8_t system_id, ui
  */
 static inline uint16_t mavlink_msg_eco_file_request_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_eco_file_request_t* eco_file_request)
 {
-    return mavlink_msg_eco_file_request_pack_chan(system_id, component_id, chan, msg, eco_file_request->target_system, eco_file_request->log_type, eco_file_request->op_type);
+    return mavlink_msg_eco_file_request_pack_chan(system_id, component_id, chan, msg, eco_file_request->target_system, eco_file_request->log_id, eco_file_request->log_type, eco_file_request->op_type);
 }
 
 /**
@@ -142,22 +151,25 @@ static inline uint16_t mavlink_msg_eco_file_request_encode_chan(uint8_t system_i
  * @param chan MAVLink channel to send the message
  *
  * @param target_system Target slave system  
+ * @param log_id Log id [0..UINT16_MAX]. If zero - no files present
  * @param log_type Log type [continious/daily/all...]
  * @param op_type Operation type [download/delete/list]
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_eco_file_request_send(mavlink_channel_t chan, uint8_t target_system, uint8_t log_type, uint8_t op_type)
+static inline void mavlink_msg_eco_file_request_send(mavlink_channel_t chan, uint8_t target_system, uint16_t log_id, uint8_t log_type, uint8_t op_type)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN];
-    _mav_put_uint8_t(buf, 0, target_system);
-    _mav_put_uint8_t(buf, 1, log_type);
-    _mav_put_uint8_t(buf, 2, op_type);
+    _mav_put_uint16_t(buf, 0, log_id);
+    _mav_put_uint8_t(buf, 2, target_system);
+    _mav_put_uint8_t(buf, 3, log_type);
+    _mav_put_uint8_t(buf, 4, op_type);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ECO_FILE_REQUEST, buf, MAVLINK_MSG_ID_ECO_FILE_REQUEST_MIN_LEN, MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN, MAVLINK_MSG_ID_ECO_FILE_REQUEST_CRC);
 #else
     mavlink_eco_file_request_t packet;
+    packet.log_id = log_id;
     packet.target_system = target_system;
     packet.log_type = log_type;
     packet.op_type = op_type;
@@ -174,7 +186,7 @@ static inline void mavlink_msg_eco_file_request_send(mavlink_channel_t chan, uin
 static inline void mavlink_msg_eco_file_request_send_struct(mavlink_channel_t chan, const mavlink_eco_file_request_t* eco_file_request)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_eco_file_request_send(chan, eco_file_request->target_system, eco_file_request->log_type, eco_file_request->op_type);
+    mavlink_msg_eco_file_request_send(chan, eco_file_request->target_system, eco_file_request->log_id, eco_file_request->log_type, eco_file_request->op_type);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ECO_FILE_REQUEST, (const char *)eco_file_request, MAVLINK_MSG_ID_ECO_FILE_REQUEST_MIN_LEN, MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN, MAVLINK_MSG_ID_ECO_FILE_REQUEST_CRC);
 #endif
@@ -188,17 +200,19 @@ static inline void mavlink_msg_eco_file_request_send_struct(mavlink_channel_t ch
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_eco_file_request_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t target_system, uint8_t log_type, uint8_t op_type)
+static inline void mavlink_msg_eco_file_request_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t target_system, uint16_t log_id, uint8_t log_type, uint8_t op_type)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_uint8_t(buf, 0, target_system);
-    _mav_put_uint8_t(buf, 1, log_type);
-    _mav_put_uint8_t(buf, 2, op_type);
+    _mav_put_uint16_t(buf, 0, log_id);
+    _mav_put_uint8_t(buf, 2, target_system);
+    _mav_put_uint8_t(buf, 3, log_type);
+    _mav_put_uint8_t(buf, 4, op_type);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ECO_FILE_REQUEST, buf, MAVLINK_MSG_ID_ECO_FILE_REQUEST_MIN_LEN, MAVLINK_MSG_ID_ECO_FILE_REQUEST_LEN, MAVLINK_MSG_ID_ECO_FILE_REQUEST_CRC);
 #else
     mavlink_eco_file_request_t *packet = (mavlink_eco_file_request_t *)msgbuf;
+    packet->log_id = log_id;
     packet->target_system = target_system;
     packet->log_type = log_type;
     packet->op_type = op_type;
@@ -220,7 +234,17 @@ static inline void mavlink_msg_eco_file_request_send_buf(mavlink_message_t *msgb
  */
 static inline uint8_t mavlink_msg_eco_file_request_get_target_system(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  0);
+    return _MAV_RETURN_uint8_t(msg,  2);
+}
+
+/**
+ * @brief Get field log_id from eco_file_request message
+ *
+ * @return Log id [0..UINT16_MAX]. If zero - no files present
+ */
+static inline uint16_t mavlink_msg_eco_file_request_get_log_id(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint16_t(msg,  0);
 }
 
 /**
@@ -230,7 +254,7 @@ static inline uint8_t mavlink_msg_eco_file_request_get_target_system(const mavli
  */
 static inline uint8_t mavlink_msg_eco_file_request_get_log_type(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  1);
+    return _MAV_RETURN_uint8_t(msg,  3);
 }
 
 /**
@@ -240,7 +264,7 @@ static inline uint8_t mavlink_msg_eco_file_request_get_log_type(const mavlink_me
  */
 static inline uint8_t mavlink_msg_eco_file_request_get_op_type(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  2);
+    return _MAV_RETURN_uint8_t(msg,  4);
 }
 
 /**
@@ -252,6 +276,7 @@ static inline uint8_t mavlink_msg_eco_file_request_get_op_type(const mavlink_mes
 static inline void mavlink_msg_eco_file_request_decode(const mavlink_message_t* msg, mavlink_eco_file_request_t* eco_file_request)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    eco_file_request->log_id = mavlink_msg_eco_file_request_get_log_id(msg);
     eco_file_request->target_system = mavlink_msg_eco_file_request_get_target_system(msg);
     eco_file_request->log_type = mavlink_msg_eco_file_request_get_log_type(msg);
     eco_file_request->op_type = mavlink_msg_eco_file_request_get_op_type(msg);

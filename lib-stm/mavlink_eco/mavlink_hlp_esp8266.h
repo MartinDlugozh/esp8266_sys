@@ -9,7 +9,7 @@
 #include "semphr.h"
 #include "queue.h"
 #include "common_freertos.h"	// Common convinence functions for FreeRTOS
-#include "UART_freertos.h"		// USART convinence functions for FreeRTOS
+#include "usart_freertos.h"		// USART convinence functions for FreeRTOS
 
 #include "esp8266_simple.h"		// Simple ESP8266 driver
 

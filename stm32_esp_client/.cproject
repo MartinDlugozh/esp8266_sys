@@ -55,13 +55,13 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/FreeRTOS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/UART_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/usart_freertos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ecolog}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/mavlink_c_ver_2}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/xfprintf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_fatfs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_eeprom}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.464970587" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -82,13 +82,13 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/FreeRTOS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/UART_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/usart_freertos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ecolog}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/mavlink_c_ver_2}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/xfprintf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_fatfs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_eeprom}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.264850404" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -109,13 +109,13 @@
 									<listOptionValue builtIn="false" value="&quot;../system/include/stm32f1-stdperiph&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/FreeRTOS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/UART_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/usart_freertos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/ecolog}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/mavlink_c_ver_2}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/xfprintf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_fatfs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_eeprom}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_simple}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.1301032846" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.11600052" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -309,6 +309,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/xfprintf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_fatfs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_eeprom}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/usart_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_freertos/pt}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.322809721" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NDEBUG"/>
@@ -336,6 +339,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/xfprintf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_fatfs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_eeprom}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/usart_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_freertos/pt}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1207453965" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NDEBUG"/>
@@ -363,6 +369,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/xfprintf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_fatfs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/stm32f1_eeprom}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/usart_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_freertos}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib-stm/esp8266_freertos/pt}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.256480684" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.738826491" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>

@@ -17,6 +17,8 @@ MACRO SECTION
 #define COM_ID_MY 		0
 #define SYS_ID_GCS 		255
 
+#define CLI_TCP_PORT_TX 1500
+
 /*-----------------------------------------------------------------------------
 INCLUDE SECTION
 -----------------------------------------------------------------------------*/
@@ -38,7 +40,7 @@ typedef struct _SYSTEMTIME_data{
 } SYSTEMTIME_data_t;
 
 typedef struct _BMP180_data{
-	float temterature;
+	float temperature;
 	float altitude;
 	uint32_t pressure;
 } BMP180_data_t;
@@ -56,15 +58,32 @@ typedef struct _SHT11_data{
 	float 		dewpoint;
 } SHT11_data_t;
 
+typedef struct _log_file_op{
+	uint8_t 	log_file_req_state;
+	uint16_t 	log_file_cnt;		// Количество лог-фалов для передачи
+	uint16_t 	log_file_seq;		// Количество принятых файлов
+	uint16_t 	log_file_block_cnt;		// Количество блоков в текущем файле
+	uint16_t 	log_file_block_seq;		// Количество принятых блоков
+	uint8_t 	log_file_name[128];
+} log_file_op_t;
+
+typedef struct _esp_network{
+//	ESP_CONN_t* conn;
+	uint8_t IP[4];
+} esp_network_t;
+
 typedef struct _client_station{
 	HEARTBEAT_data_t 	HEARTBEAT_data;
 	SYSTEMTIME_data_t 	SYSTEMTIME_data;
 	MAX44009_data_t 	MAX44009_data;
 	SHT11_data_t 		SHT11_data;
 	BMP180_data_t 		BMP180_data;
+	log_file_op_t 		log_file_op;
+	esp_network_t		network;
 } client_station_t;
 
 client_station_t client_station[NUM_CLIENT_STATIONS];
+uint8_t stations_connected = 0;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION

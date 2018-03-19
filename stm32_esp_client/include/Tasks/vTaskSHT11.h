@@ -31,6 +31,7 @@ GLOBAL VARIABLES SECTION
 -----------------------------------------------------------------------------*/
 //SHT11_t SHT11_Data;
 SemaphoreHandle_t xMutex_SHT11_Data;
+TaskHandle_t xTaskHandleSHT11Sample;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
@@ -95,6 +96,7 @@ void vSHT11_sample(void *pvParameters)
 		}
 
 		vTaskDelayUntil(&pxPreviousWakeTime, SHT11_SAMPLING_PERIOD);
+		uxHighWaterMark[HIGH_WATERMARK_SHT11] = uxTaskGetStackHighWaterMark(NULL);
 	}while(1);
 	vTaskDelete(NULL);
 }

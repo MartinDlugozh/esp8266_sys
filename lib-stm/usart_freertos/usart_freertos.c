@@ -41,6 +41,7 @@ HEADER SECTION
 /*-----------------------------------------------------------------------------
 IMPLEMENTATION SECTION
 -----------------------------------------------------------------------------*/
+#if(USE_FTOA == 1)
 char * ftoa(double f, char * buf, int precision)
 {
 	char * ptr = buf;
@@ -127,8 +128,9 @@ char * ftoa(double f, char * buf, int precision)
 	// terminating zero
 	*ptr = 0;
 
-	return buf;
+	return ptr;
 }
+#endif
 
 void uart_send_byte(USART_TypeDef* USARTx, uint8_t data)  {
 	while(!(USARTx->SR & USART_SR_TXE));
@@ -199,11 +201,44 @@ uint32_t uart_param2baudrate(uint16_t baudrate_param) {
 	return 57600;
 }
 
+#if(USE_USART_1 == 1)
 void initUSART1(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, 	ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, 	ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, 	ENABLE);
+
+#if(USE_USART_1_DMA_TX == 1)
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+
+	DMA_InitTypeDef DMA_InitStruct;
+	DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)&(USART1->DR);
+	DMA_InitStruct.DMA_MemoryBaseAddr = (uint32_t)&usart1dmaBuffer[0];
+	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralDST;
+	DMA_InitStruct.DMA_BufferSize = sizeof(usart1dmaBuffer);
+	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;
+	DMA_InitStruct.DMA_Priority = DMA_Priority_Low;
+	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;
+	DMA_Init(DMA1_Channel4, &DMA_InitStruct);
+
+	USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);
+
+	DMA_ITConfig(DMA1_Channel4, DMA_IT_TC, ENABLE);
+	NVIC_InitTypeDef nvic_dma;
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);		/*!< 0 bits for pre-emption priority, 4 bits for subpriority */
+	nvic_dma.NVIC_IRQChannel = DMA1_Channel4_IRQn;
+	nvic_dma.NVIC_IRQChannelPreemptionPriority = configLIBRARY_LOWEST_INTERRUPT_PRIORITY;
+	nvic_dma.NVIC_IRQChannelSubPriority = 0;
+	nvic_dma.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&nvic_dma);
+	NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+	vSemaphoreCreateBinary(xUsart1TxDmaSemaphore);
+	xSemaphoreGive(xUsart1TxDmaSemaphore);
+#endif 	/* USE_USART_1_DMA_TX */
 
 	GPIO_InitTypeDef gpio;
 	GPIO_StructInit(&gpio);							/*** Configure UART Rx GPIO ***/
@@ -232,7 +267,7 @@ void initUSART1(void)
 	NVIC_InitTypeDef nvic;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);		/*!< 0 bits for pre-emption priority, 4 bits for subpriority */
 	nvic.NVIC_IRQChannel = USART1_IRQn;
-	nvic.NVIC_IRQChannelPreemptionPriority = 15;
+	nvic.NVIC_IRQChannelPreemptionPriority = configLIBRARY_LOWEST_INTERRUPT_PRIORITY-1;
 	nvic.NVIC_IRQChannelSubPriority = 0;
 	nvic.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nvic);
@@ -241,11 +276,50 @@ void initUSART1(void)
 	vSemaphoreCreateBinary(xUsart1RxInterruptSemaphore);
 }
 
+#if(USE_USART_1_DMA_TX == 1)
+void DMA1_Channel4_IRQHandler(void)
+{
+	portBASE_TYPE xHigherPriorityTaskWoken;
+	xHigherPriorityTaskWoken = pdFALSE;
+
+    DMA_ClearITPendingBit(DMA1_IT_TC4);
+    DMA_Cmd(DMA1_Channel4, DISABLE);
+
+    xSemaphoreGiveFromISR(xUsart1TxDmaSemaphore, &xHigherPriorityTaskWoken);
+   	portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+}
+#endif
+#endif
+
+#if(USE_USART_2 == 1)
 void initUSART2(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, 	ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, 	ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, 	ENABLE);
+
+#if(USE_USART_2_DMA_TX == 1)
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+
+	DMA_InitTypeDef DMA_InitStruct;
+	DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)&(USART2->DR);
+	DMA_InitStruct.DMA_MemoryBaseAddr = (uint32_t)&usart2dmaBuffer[0];
+	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralDST;
+	DMA_InitStruct.DMA_BufferSize = sizeof(usart2dmaBuffer);
+	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;
+	DMA_InitStruct.DMA_Priority = DMA_Priority_Low;
+	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;
+	DMA_Init(DMA1_Channel7, &DMA_InitStruct);
+
+	USART_DMACmd(USART2, USART_DMAReq_Tx, ENABLE);
+
+	DMA_ITConfig(DMA1_Channel7, DMA_IT_TC, ENABLE);
+	NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+#endif 	/* USE_USART_1_DMA_TX */
 
 	GPIO_InitTypeDef gpio;
 	GPIO_StructInit(&gpio);							/*** Configure UART Rx GPIO ***/
@@ -274,7 +348,7 @@ void initUSART2(void)
 	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);    	// Enable RXNE interrupt
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);		/*!< 0 bits for pre-emption priority, 4 bits for subpriority */
 	nvic.NVIC_IRQChannel = USART2_IRQn;
-	nvic.NVIC_IRQChannelPreemptionPriority = 15;
+	nvic.NVIC_IRQChannelPreemptionPriority = configLIBRARY_LOWEST_INTERRUPT_PRIORITY;
 	nvic.NVIC_IRQChannelSubPriority = 0;
 	nvic.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nvic);
@@ -282,3 +356,4 @@ void initUSART2(void)
 
 	vSemaphoreCreateBinary(xUsart2RxInterruptSemaphore);
 }
+#endif

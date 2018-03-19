@@ -26,6 +26,7 @@ INCLUDE SECTION
 #include "blue_pill/blue_pill.h"
 #include "bmp180/bmp180.h"
 #include "client_global_sect.h"
+#include "Tasks/vTaskDebug.h"
 
 /*-----------------------------------------------------------------------------
 GLOBAL VARIABLES SECTION
@@ -33,6 +34,8 @@ GLOBAL VARIABLES SECTION
 BMP180_t BMP180_Data;
 SemaphoreHandle_t xMutex_BMP180_Data;
 uint8_t BMP180_check_cnt = 0;
+
+TaskHandle_t xTaskHandleBMP180Sample;
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
@@ -65,7 +68,7 @@ void vBMP180_sample(void *pvParameters)
 				BMP180_ReadPressure(&BMP180_Data); 		/* Read pressure value */
 
 				if((BMP180_Data.Temperature >= BMP180_TEMPERATURE_MIN) && (BMP180_Data.Temperature <= BMP180_TEMPERATURE_MAX)){
-					station.BMP180_data.temterature = BMP180_Data.Temperature;
+					station.BMP180_data.temperature = BMP180_Data.Temperature;
 				}
 				if((BMP180_Data.Altitude >= BMP180_ALTITUDE_MIN) && (BMP180_Data.Altitude <= BMP180_ALTITUDE_MAX)){
 					station.BMP180_data.altitude = BMP180_Data.Altitude;
@@ -98,6 +101,7 @@ void vBMP180_sample(void *pvParameters)
 		}
 
 		vTaskDelayUntil(&pxPreviousWakeTime, BMP180_SAMPLING_PERIOD);
+		uxHighWaterMark[HIGH_WATERMARK_BMP180S] = uxTaskGetStackHighWaterMark(NULL);
 	}while(1);
 	vTaskDelete(NULL);
 }

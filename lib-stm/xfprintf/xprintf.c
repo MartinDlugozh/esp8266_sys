@@ -11,14 +11,44 @@
 /
 /-------------------------------------------------------------------------*/
 
-#include "UART_freertos.h"
+#include "usart_freertos.h"
 #include "xprintf.h"
-
+#include <string.h>
 
 #if _USE_XFUNC_OUT
 #include <stdarg.h>
-//void (*xfunc_out)(unsigned char);	/* Pointer to the output stream */
-static char *outptr;
+
+void usart_dma_start(void){
+#if(USE_AS_DEBUG_PORT == _USART_PORT1)
+#if(USE_USART_1_DMA_TX == 1)
+	usart1dmaBuffPtr = usart1dmaBuffer;
+	memset(usart1dmaBuffer, 0, USART_1_DMA_TX_BUF_SIZE);
+#endif
+#elif(USE_AS_DEBUG_PORT == _USART_PORT2)
+#if(USE_USART_2_DMA_TX == 1)
+	usart2dmaBuffPtr = usart2dmaBuffer;
+	memset(usart2dmaBuffer, 0, USART_2_DMA_TX_BUF_SIZE);
+#endif
+#endif
+}
+
+void usart_dma_send(void){
+#if(USE_AS_DEBUG_PORT == _USART_PORT1)
+#if(USE_USART_1_DMA_TX == 1)
+	DMA_Cmd(DMA1_Channel4, DISABLE);
+	DMA1_Channel4->CNDTR = strlen((const char *)usart1dmaBuffer);
+	DMA_Cmd(DMA1_Channel4, ENABLE);
+	usart1dmaBuffPtr = usart1dmaBuffer;
+#endif
+#elif(USE_AS_DEBUG_PORT == _USART_PORT2)
+#if(USE_USART_2_DMA_TX == 1)
+	DMA_Cmd(DMA1_Channel7, DISABLE);
+		DMA1_Channel7->CNDTR = strlen((const char *)usart2dmaBuffer);
+		DMA_Cmd(DMA1_Channel7, ENABLE);
+		usart2dmaBuffPtr = usart2dmaBuffer;
+#endif
+#endif
+}
 
 /*----------------------------------------------*/
 /* Put a character                              */
@@ -28,46 +58,28 @@ void xputc (char c)
 {
 	if (_CR_CRLF && c == '\n') xputc('\r');		/* CR -> CRLF */
 
-	if (outptr) {
-		*outptr++ = (unsigned char)c;
-		return;
-	}
-
-//	if (xfunc_out) xfunc_out((unsigned char)c);
+#if((USE_USART_1_DMA_TX == 1) || (USE_USART_2_DMA_TX == 1))
+	*usart1dmaBuffPtr++ = (uint8_t)c;
+#else
 	uart_send_byte(XPRINTF_USART, (uint8_t)c);
+#endif
 }
 
-
-
-/*----------------------------------------------*/
-/* Put a null-terminated string                 */
-/*----------------------------------------------*/
-
-void xputs (					/* Put a string to the default device */
-	const char* str				/* Pointer to the string */
-)
+/**
+ * Put a null-terminated string
+ *
+ * input:
+ * 		const char* str - Pointer to the string
+ */
+void xputs (const char* str)
 {
+	usart_dma_start();
+
 	while (*str)
 		xputc(*str++);
+
+	usart_dma_send();
 }
-
-
-//void xfputs (					/* Put a string to the specified device */
-//	void(*func)(unsigned char),	/* Pointer to the output function */
-//	const char*	str				/* Pointer to the string */
-//)
-//{
-//	void (*pf)(unsigned char);
-//
-//
-//	pf = xfunc_out;		/* Save current output device */
-//	xfunc_out = func;	/* Switch output to specified device */
-//	while (*str)		/* Put the string */
-//		xputc(*str++);
-//	xfunc_out = pf;		/* Restore output device */
-//}
-
-
 
 /*----------------------------------------------*/
 /* Formatted string output                      */
@@ -85,7 +97,6 @@ void xputs (					/* Put a string to the default device */
     xprintf("%c", 'a');				"a"
     xprintf("%f", 10.0);            <xprintf lacks floating point support>
 */
-
 static
 void xvprintf (
 	const char*	fmt,	/* Pointer to the format string */
@@ -96,6 +107,7 @@ void xvprintf (
 	unsigned long v;
 	char s[16], c, d, *p;
 
+	usart_dma_start();
 
 	for (;;) {
 		c = *fmt++;					/* Get a char */
@@ -161,69 +173,29 @@ void xvprintf (
 		do xputc(s[--i]); while(i);
 		while (j++ < w) xputc(' ');
 	}
+
+	usart_dma_send();
 }
 
-
-void xprintf (			/* Put a formatted string to the default device */
-	const char*	fmt,	/* Pointer to the format string */
-	...					/* Optional arguments */
-)
+/**
+ * Put a formatted string to the default device
+ *
+ * input:
+ * 		const char*	fmt - Pointer to the format string
+ * 		... - Optional arguments
+ */
+void xprintf (const char*	fmt, ...)
 {
 	va_list arp;
-
 
 	va_start(arp, fmt);
 	xvprintf(fmt, arp);
 	va_end(arp);
 }
-
-
-void xsprintf (			/* Put a formatted string to the memory */
-	char* buff,			/* Pointer to the output buffer */
-	const char*	fmt,	/* Pointer to the format string */
-	...					/* Optional arguments */
-)
-{
-	va_list arp;
-
-
-	outptr = buff;		/* Switch destination for memory */
-
-	va_start(arp, fmt);
-	xvprintf(fmt, arp);
-	va_end(arp);
-
-	*outptr = 0;		/* Terminate output string with a \0 */
-	outptr = 0;			/* Switch destination for device */
-}
-
-
-//void xfprintf (					/* Put a formatted string to the specified device */
-//	void(*func)(unsigned char),	/* Pointer to the output function */
-//	const char*	fmt,			/* Pointer to the format string */
-//	...							/* Optional arguments */
-//)
-//{
-//	va_list arp;
-//	void (*pf)(unsigned char);
-//
-//
-//	pf = xfunc_out;		/* Save current output device */
-//	xfunc_out = func;	/* Switch output to specified device */
-//
-//	va_start(arp, fmt);
-//	xvprintf(fmt, arp);
-//	va_end(arp);
-//
-//	xfunc_out = pf;		/* Restore output device */
-//}
-
-
 
 /*----------------------------------------------*/
 /* Dump a line of binary dump                   */
 /*----------------------------------------------*/
-
 void put_dump (
 	const void* buff,		/* Pointer to the array to be dumped */
 	unsigned long addr,		/* Heading address value */
@@ -236,7 +208,6 @@ void put_dump (
 	const unsigned short *sp;
 	const unsigned long *lp;
 
-
 	xprintf("%08lX:", addr);		/* address */
 
 	switch (width) {
@@ -244,7 +215,9 @@ void put_dump (
 		bp = buff;
 		for (i = 0; i < len; i++)		/* Hexdecimal dump */
 			xprintf(" %02X", bp[i]);
+		usart_dma_start();
 		xputc(' ');
+		usart_dma_send();
 		for (i = 0; i < len; i++)		/* ASCII dump */
 			xputc((bp[i] >= ' ' && bp[i] <= '~') ? bp[i] : '.');
 		break;
@@ -262,10 +235,12 @@ void put_dump (
 		break;
 	}
 
+	usart_dma_start();
 #if !_LF_CRLF
 	xputc('\r');
 #endif
 	xputc('\n');
+	usart_dma_send();
 }
 
 #endif /* _USE_XFUNC_OUT */

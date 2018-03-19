@@ -31,11 +31,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/UART_freertos</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>src/blue_pill</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -82,6 +77,11 @@
 		</link>
 		<link>
 			<name>src/stm32f1_fatfs</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/usart_freertos</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -204,16 +204,6 @@
 			<name>src/FreeRTOS/timers.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/FreeRTOS/timers.h</locationURI>
-		</link>
-		<link>
-			<name>src/UART_freertos/UART_freertos.c</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/UART_freertos/UART_freertos.c</locationURI>
-		</link>
-		<link>
-			<name>src/UART_freertos/UART_freertos.h</name>
-			<type>1</type>
-			<locationURI>WORKSPACE_LOC/libraries/lib-stm/UART_freertos/UART_freertos.h</locationURI>
 		</link>
 		<link>
 			<name>src/blue_pill/blue_pill.h</name>
@@ -369,6 +359,16 @@
 			<name>src/stm32f1_fatfs/integer.h</name>
 			<type>1</type>
 			<locationURI>WORKSPACE_LOC/libraries/lib-stm/stm32f1_fatfs/integer.h</locationURI>
+		</link>
+		<link>
+			<name>src/usart_freertos/usart_freertos.c</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/usart_freertos/usart_freertos.c</locationURI>
+		</link>
+		<link>
+			<name>src/usart_freertos/usart_freertos.h</name>
+			<type>1</type>
+			<locationURI>WORKSPACE_LOC/libraries/lib-stm/usart_freertos/usart_freertos.h</locationURI>
 		</link>
 		<link>
 			<name>src/xfprintf/xprintf.c</name>
