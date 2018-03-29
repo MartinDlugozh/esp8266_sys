@@ -18,6 +18,7 @@
 #ifndef __EEPROM_H
 #define __EEPROM_H
 
+#pragma once
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
 
@@ -91,6 +92,9 @@ static const u16 VirtAddVarTab[NumbOfVar] =
 		(u16)PAGE0_BASE_ADDRESS+18		// [12]
 };
 //u16 VirtAddVarTab[NumbOfVar];
+
+#define EEPROM_SIGNATURE 			128
+#define EEPROM_ADDR_EEP_SIGNATURE 	VirtAddVarTab[10]
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/

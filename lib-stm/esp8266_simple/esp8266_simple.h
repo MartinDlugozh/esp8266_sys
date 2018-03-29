@@ -61,6 +61,7 @@ static const char RESPONSE_SEND_OK[] = 			"SEND OK";
 static const char RESPONSE_ERROR[] = 			"ERROR";
 static const char RESPONSE_FAIL[] = 			"FAIL";
 static const char RESPONSE_READY[] = 			"READY!";
+static const char RESPONSE_NOCHANGE[] =			"no change";
 static const char RESPONSE_ALREADY[] = 			"ALREADY";
 static const char RESPONSE_TCP_RECEIVED[] = 	"+IPD,";
 static const char ESP8266_TEST[] = 				"AT";				// Test AT startup
@@ -105,14 +106,14 @@ typedef enum{
 	ESP_TIMEOUT,
 	ESP_BUFFER_OVERFLOW,
 	ESP_OTHER,
-}ESP8266_Result_t;
+}esp8266_result;
 
 typedef enum{
 	ESP_WAIT_IPD = 0,
 	ESP_WAIT_HEADER,
 	ESP_RECEIVE_TCP,
 	ESP_TCP_RECEPTION_DONE,
-}ESP8266_IPD_t;
+}esp8266_ipd;
 
 typedef enum {
 	ESP8266_CMD_BAD = -5,
@@ -169,7 +170,7 @@ char esp8266RxBuffer[ESP8266_RX_BUFFER_LEN];
 char tcpRxBuffer[TCP_RX_BUFFER_LEN];
 char* bufferHead = esp8266RxBuffer; 			// Holds position of latest byte placed in buffer.
 char* tcpBufferHead = tcpRxBuffer;
-//char* tcpDataProcPtr = esp8266RxBuffer;
+char* tcpDataProcPtr = esp8266RxBuffer;
 uint8_t current_connection = 0;
 
 uint8_t receiveState = 0;
@@ -177,107 +178,6 @@ uint16_t unprocessed_bytes = 0;
 uint8_t payload_len = 0;
 uint8_t transmission_free = 1;
 
-///**
-// * \brief           Security settings for wifi network
-// */
-//typedef enum _ESP_Ecn_t {
-//	ESP_Ecn_OPEN = 0x00,                                /*!< Wifi is open */
-//	ESP_Ecn_WEP = 0x01,                                 /*!< Wired Equivalent Privacy option for wifi security. \note  This mode can't be used when setting up ESP8266 wifi */
-//	ESP_Ecn_WPA_PSK = 0x02,                             /*!< Wi-Fi Protected Access */
-//	ESP_Ecn_WPA2_PSK = 0x03,                            /*!< Wi-Fi Protected Access 2 */
-//	ESP_Ecn_WPA_WPA2_PSK = 0x04,                        /*!< Wi-Fi Protected Access with both modes */
-//} ESP_Ecn_t;
-//
-///**
-// * \brief           AP station structure to use when searching for network
-// */
-//typedef struct _ESP_AP_t {
-//	ESP_Ecn_t Ecn;                                      /*!< Security of Wi-Fi spot. This parameter has a value of \ref ESP_Ecn_t enumeration */
-//	char SSID[20 + 1];                                  /*!< Service Set Identifier value. Wi-Fi spot name */
-//	int16_t RSSI;                                       /*!< Signal strength of Wi-Fi spot */
-//	uint8_t MAC[6];                                     /*!< MAC address of spot */
-//	uint8_t Channel;                                    /*!< Wi-Fi channel */
-//	int8_t Offset;                                      /*!< Frequency offset from base 2.4GHz in kHz */
-//	uint8_t Calibration;                                /*!< Frequency offset calibration */
-//} ESP_AP_t;
-//
-///**
-// * \brief           Connected AP structure
-// */
-//typedef struct _ESP_ConnectedAP_t {
-//	char SSID[20 + 1];                                  /*!< SSID network name */
-//	uint8_t MAC[6];                                     /*!< MAC address of network */
-//	uint8_t Channel;                                    /*!< Network channel */
-//	int16_t RSSI;                                       /*!< Signal strength */
-//} ESP_ConnectedAP_t;
-//
-///**
-// * \brief           Structure for connected station to softAP to ESP module
-// */
-//typedef struct _ESP_ConnectedStation_t {
-//	uint8_t IP[4];                                      /*!< IP address of connected station */
-//	uint8_t MAC[6];                                     /*!< MAC address of connected station */
-//} ESP_ConnectedStation_t;
-//
-///**
-// * \brief           Connection type
-// */
-//typedef enum _ESP_CONN_Type_t {
-//	ESP_CONN_Type_TCP = 0x00,                           /*!< Connection type is TCP */
-//	ESP_CONN_Type_UDP = 0x01,                           /*!< Connection type is UDP */
-//	ESP_CONN_Type_SSL = 0x02                            /*!< Connection type is SSL */
-//} ESP_CONN_Type_t;
-//
-///**
-// * \brief           Connection structure
-// */
-//typedef struct _ESP_CONN_t {
-//	uint8_t Number;                                     /*!< Connection number */
-//	uint16_t RemotePort;                                /*!< Remote PORT number */
-//	uint8_t RemoteIP[4];                                /*!< IP address of device */
-//    uint16_t LocalPort;                                 /*!< Local PORT number */
-//	ESP_CONN_Type_t Type;                               /*!< Connection type. Parameter is valid only if connection is made as client */
-//
-//    uint16_t DataLength;                                /*!< Number of bytes received in connection packet */
-//
-//    uint32_t TotalBytesReceived;                        /*!< Number of total bytes so far received on connection */
-//    uint32_t DataStartTime;                             /*!< Current time in units of milliseconds when first data packet was received on connection */
-//	union {
-//		struct {
-//			int Active:1;                               /*!< Status if connection is active */
-//			int Client:1;                               /*!< Set to 1 if connection was made as client */
-//            int SSL:1;                                  /*!< Connection has been made as SSL */
-//        } F;
-//		uint8_t Value;                                  /*!< Value of entire union */
-//	} Flags;                                            /*!< Connection flags management */
-//    union {
-//        struct {
-//            int Connect:1;                              /*!< Connection was just connected, client or server */
-//            int Closed:1;                               /*!< Connection was just disconnected, client or server */
-//            int DataSent:1;                             /*!< Data were sent successfully */
-//            int DataError:1;                            /*!< Error trying to send data */
-//            int CallLastPartOfPacketReceived:1;         /*!< Data are processed synchronously. When there is last part of packet received and command is not idle, we must save notification for callback */
-//        } F;
-//        int Value;
-//    } Callback;                                         /*!< Flags for callback management */
-//
-//    void* Arg;                                          /*!< Custom connection argument */
-//
-//    uint32_t PollTimeInterval;                          /*!< Interval for poll callback when connection is active but nothing happens to it */
-//    uint32_t PollTime;                                  /*!< Internal next poll time */
-//} ESP_CONN_t;
-//
-///**
-// * \brief         IPD network data structure
-// */
-//typedef struct _ESP_IPD_t {
-//	uint8_t InIPD;                                      /*!< Set to 1 when ESP is in IPD mode with data */
-//	uint8_t Conn;                                 		/*!< Connection number where IPD is active */
-//    uint16_t BytesRemaining;                            /*!< Remaining bytes to read from entire IPD statement */
-//    uint16_t BytesRead;                                 /*!< Bytes read in current packet */
-//} ESP_IPD_t;
-//
-//ESP_IPD_t IPD;
 /*-----------------------------------------------------------------------------
 HEADER SECTION
 -----------------------------------------------------------------------------*/
@@ -289,8 +189,6 @@ uint8_t esp8266SearchBuffer(const char * test);
 uint8_t esp8266ReadForResponses(const char *pass, const char *fail, const char *other, unsigned int timeout);
 uint8_t esp8266SetMux(uint8_t mux);
 uint8_t esp8266Test(void);
-//uint8_t esp8266Begin(void);
-//int tcp_getdata(unsigned char* buf, int count);
 uint8_t esp8266SetMode(esp8266_wifi_mode mode);
 uint8_t esp8266Connect(const char * ssid, const char * pwd);
 uint8_t esp8266TcpConnect(const char* destination, const char* port, const char* link);
@@ -299,24 +197,36 @@ uint8_t esp8266TcpClose(uint8_t link);
 uint8_t esp8266ListConectedStaions(void);
 uint8_t esp8266ServerCreate(uint16_t port, uint8_t enable);
 uint8_t esp8266GetLinkID(void);
-void ESP8266_RxCallBack(char c);
+void esp8266RxCallBack(char c);
 
 /*-----------------------------------------------------------------------------
 IMPLEMENTATION SECTION
 -----------------------------------------------------------------------------*/
 
-///* Returns number from hex value */
-//uint8_t Hex2Num(char a) {
-//    if (a >= '0' && a <= '9') {                             /* Char is num */
-//        return a - '0';
-//    } else if (a >= 'a' && a <= 'f') {                      /* Char is lowercase character A - Z (hex) */
-//        return (a - 'a') + 10;
-//    } else if (a >= 'A' && a <= 'F') {                      /* Char is uppercase character A - Z (hex) */
-//        return (a - 'A') + 10;
-//    }
-//
-//    return 0;
-//}
+/**
+ * Get decimal number from string
+ */
+int32_t getDecNum(char* str, char **restrict endPtr, uint8_t max_passed, esp8266_result* result){
+	int32_t number = 0;
+	uint8_t passed = 0;
+
+	if(str != NULL){
+		while(!isdigit(*str)){
+			str++;
+			passed++;
+			if(passed >= max_passed){
+				*result = ESP_ERROR;
+				return 0;
+			}
+		}
+		*result = ESP_OK;
+		number = strtol(str, endPtr, 10);
+		return number;
+	}
+
+	*result = ESP_ERROR;
+	return 0;
+}
 
 /* Parses and returns number from string */
 int32_t ParseNumber(const char* ptr, uint8_t* cnt) {
@@ -353,137 +263,6 @@ int32_t ParseNumber(const char* ptr, uint8_t* cnt) {
     }
     return sum;                                       		/* Return number */
 }
-
-///* Parses and returns HEX number from string */
-//uint32_t ParseHexNumber(const char* ptr, uint8_t* cnt) {
-//    uint32_t sum = 0;
-//    uint8_t i = 0;
-//
-//    while (CHARISHEXNUM(*ptr)) {                    		/* Parse number */
-//        sum <<= 4;
-//        sum += Hex2Num(*ptr);
-//        ptr++;
-//        i++;
-//    }
-//
-//    if (cnt) {                               		        /* Save number of characters used for number */
-//        *cnt = i;
-//    }
-//    return sum;                                        		/* Return number */
-//}
-//
-///* Parse MAC number in string format xx:xx:xx:xx:xx:xx */
-//void ParseMAC(const char* str, uint8_t* mac, uint8_t* cnt) {
-//    uint8_t i = 6;
-//
-//    while (i--) {
-//        *mac++ = ParseHexNumber(str, NULL);
-//        str += 3;
-//    }
-//    if (cnt) {
-//        *cnt = 17;
-//    }
-//}
-//
-///* Parse IP number in string format 'xxx.xxx.xxx.xxx' */
-//void ParseIP(const char* str, uint8_t* ip, uint8_t* cnt) {
-//    uint8_t i = 4;
-//    uint8_t c = 0;
-//
-//    if (cnt) {
-//        *cnt = 0;
-//    }
-//    while (i--) {
-//        *ip++ = ParseNumber(str, &c);
-//        str += c + 1;
-//        if (cnt) {
-//            *cnt += c;
-//            if (i) {
-//                *cnt += 1;
-//            }
-//        }
-//    }
-//}
-//
-///* Parse +CWLAP statement */
-//void ParseCWLAP(const char* str, ESP_AP_t* AP) {
-//    uint8_t cnt;
-//
-//    if (*str == '(') {                                      /* Remove opening bracket */
-//        str++;
-//    }
-//
-//    memset((void *)AP, 0x00, sizeof(ESP_AP_t));             /* Reset structure first */
-//
-//    AP->Ecn = (ESP_Ecn_t)ParseNumber(str, &cnt);            /* Parse ECN value */
-//    str += cnt + 1;
-//
-//    if (*str == '"') {                                      /* Remove opening " */
-//        str++;
-//    }
-//
-//    cnt = 0;                                                /* Parse SSID */
-//    while (*str) {
-//        if (*str == '"' && *(str + 1) == ',') {
-//            break;
-//        }
-//        if (cnt < sizeof(AP->SSID) - 1) {
-//            AP->SSID[cnt] = *str;
-//        }
-//
-//        cnt++;
-//        str++;
-//    }
-//
-//    str += 2;                                               /* Parse RSSI */
-//    AP->RSSI = ParseNumber(str, &cnt);
-//
-//    str += cnt + 1;
-//    if (*str == '"') {
-//        str++;
-//    }
-//    ParseMAC(str, AP->MAC, NULL);                      		/* Parse MAC */
-//    str += 19;                                              /* Ignore mac, " and comma */
-//    AP->Channel = ParseNumber(str, &cnt);                   /* Parse channel for wifi */
-//    str += cnt + 1;
-//    AP->Offset = ParseNumber(str, &cnt);                    /* Parse offset */
-//    str += cnt + 1;
-//    AP->Calibration = ParseNumber(str, &cnt);               /* Parse calibration number */
-//    str += cnt + 1;
-//}
-//
-///* Parse +CWJAP statement */
-//void ParseCWJAP(const char* ptr, ESP_ConnectedAP_t* AP) {
-//    uint8_t i, cnt;
-//
-//    while (*ptr && *ptr != '"') {                    		/* Find first " character */
-//        ptr++;
-//    }
-//    if (!*ptr) {                                    		/* Check if zero detected */
-//        return;
-//    }
-//    ptr++;                                            		/* Remove first " for SSID */
-//    i = 0;                                            		/* Parse SSID part */
-//    while (*ptr && (*ptr != '"' || *(ptr + 1) != ',' || *(ptr + 2) != '"')) {
-//        AP->SSID[i++] = *ptr++;
-//    }
-//    AP->SSID[i++] = 0;
-//    ptr += 3;                                        		/* Increase pointer by 3, ignore "," part */
-//    ParseMAC(ptr, AP->MAC, NULL);    	               		 /* Get MAC */
-//    ptr += 19;                                    		    /* Increase counter by elements in MAC address and ", part */
-//    AP->Channel = ParseNumber(ptr, &cnt);	                /* Get channel */
-//    ptr += cnt + 1;                                    		/* Increase position */
-//    AP->RSSI = ParseNumber(ptr, &cnt);    					/* Get RSSI */
-//}
-//
-///* Parse CWLIF statement with IP and MAC */
-//void ParseCWLIF(const char* str, ESP_ConnectedStation_t* station) {
-//    uint8_t cnt;
-//
-//    ParseIP(str, station->IP, &cnt);                   /* Parse IP address */
-//    str += cnt + 1;
-//    ParseMAC(str, station->MAC, &cnt);                 /* Parse MAC */
-//}
 
 void esp8266ClearBuffer(void)
 {
@@ -603,40 +382,6 @@ uint8_t esp8266Test(void)
 	return ESP_ERROR;
 }
 
-//uint8_t esp8266Begin(void)
-//{
-//	uint8_t test = ESP_ERROR;
-//	test = esp8266Test();
-//	if(test)
-//	{
-//		if (esp8266SetMux(1))
-//			return ESP_OK;
-//		return ESP_ERROR;
-//	}
-//	return ESP_ERROR;
-//}
-
-//int tcp_getdata(unsigned char* buf, int count)
-//{
-//	int i;
-//	if(count <= TCP_RX_BUFFER_LEN)
-//	{
-//		for(i = 0; i < count; i++)
-//		{
-//			*(buf + i) = tcpRxBuffer[i];
-//		}
-//		for(i = 0; i < TCP_RX_BUFFER_LEN - count; i++)
-//		{
-//			tcpRxBuffer[i] = tcpRxBuffer[i+count];
-//		}
-//		return count;
-//	}
-//	else
-//	{
-//		return -1;
-//	}
-//}
-
 uint8_t esp8266SetMode(esp8266_wifi_mode mode)
 {
 	esp8266ClearBuffer();
@@ -716,7 +461,7 @@ uint8_t esp8266TcpSend(uint8_t *buf, uint16_t size, uint8_t link)
 		char params[8];
 		if (size > 2048)
 			return ESP_ERROR; //ESP8266_CMD_BAD
-		sprintf(params, "%d,%d", link, size+1);
+		sprintf(params, "%d,%d", link, size); // sprintf(params, "%d,%d", link, size+1);
 		esp8266SendCommand(ESP8266_TCP_SEND, ESP8266_CMD_SETUP, params); // +CIPSENDBUF
 
 		result = esp8266ReadForResponses(RESPONSE_PROMPT, RESPONSE_ERROR, NULL, COMMAND_RESPONSE_TIMEOUT);
@@ -726,7 +471,6 @@ uint8_t esp8266TcpSend(uint8_t *buf, uint16_t size, uint8_t link)
 			uart_send_str_n(ESP8266_USART, (char *)p, size);
 			uart_send_byte(ESP8266_USART, '\0'); // size+1
 			result = esp8266ReadForResponse(RESPONSE_SEND_OK, COMMAND_RESPONSE_TIMEOUT); 	// "SEND OK"
-//			result=1; // FIXME: затычка, оставшаяся из прошлой версии; возможно, придется вернуть
 			if (result == ESP_OK){
 				transmission_free = 1;
 				return ESP_OK;
@@ -742,7 +486,7 @@ uint8_t esp8266TcpClose(uint8_t link)
 	uint8_t rc = ESP_ERROR;
 	char params[8];
 	sprintf(params, "%d", link);
-	esp8266SendCommand(ESP8266_SERVER_CONFIG, ESP8266_CMD_SETUP, params);
+	esp8266SendCommand(ESP8266_TCP_CLOSE, ESP8266_CMD_SETUP, params);
 	esp8266ClearBuffer();
 	rc = esp8266ReadForResponse(RESPONSE_OK, COMMAND_RESPONSE_TIMEOUT);
 	return rc;
@@ -769,8 +513,9 @@ uint8_t esp8266ServerCreate(uint16_t port, uint8_t enable)
 
 	esp8266SendCommand(ESP8266_SERVER_CONFIG, ESP8266_CMD_SETUP, params);
 	esp8266ClearBuffer();
-	if(esp8266ReadForResponse(RESPONSE_OK, COMMAND_RESPONSE_TIMEOUT)){
-		return ESP_OK;}
+	if(esp8266ReadForResponses(RESPONSE_OK, RESPONSE_ERROR, RESPONSE_NOCHANGE, COMMAND_RESPONSE_TIMEOUT) == ESP_OK){
+		return ESP_OK;
+	}
 	return ESP_ERROR;
 }
 
@@ -796,78 +541,6 @@ uint8_t esp8266GetLinkID(void)
 	return id;
 }
 
-//void ESP8266_RxCallBack(char c)
-//{
-//	if(bufferHead >= ESP8266_RX_BUFFER_LEN)
-//	{
-//		esp8266ClearBuffer();
-//		esp8266ClearTcpBuffer();
-//		receiveState = 0;
-//	}
-//
-//	esp8266RxBuffer[bufferHead] = c;
-//
-//	switch(receiveState)
-//	{
-//	case 0:
-//	{
-//		if(strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED) != NULL)	//"+IPD,"
-//		{
-//			receiveState = 1;
-//		}
-//		break;
-//	}
-//	case 1:
-//	{
-//		if(esp8266RxBuffer[bufferHead] != ':'){
-//			break;
-//		}else{
-//			esp8266ClearTcpBuffer();
-//
-//			char *p;
-//			p = strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED);	//"+IPD,"
-//			char strlen[3];
-//
-//			memcpy(strlen, p+7, (strstr((const char *)esp8266RxBuffer, ":") - (p+7)));
-//
-//			int16_t len;
-//			len = (atoi(strlen));		// в первой версии len = (atoi(strlen) - 1);
-//			if((len >= 0) && (len <= TCP_RX_BUFFER_LEN)){
-//				payload_len = len;
-//				receiveState = 2;
-//			}else{
-//				receiveState = 0;
-//				payload_len = 0;
-//
-//				esp8266ClearBuffer();
-//			}
-//		}
-//		break;
-//	}
-//	case 2:
-//	{
-//		tcpRxBuffer[tcpBufferHead++] = esp8266RxBuffer[bufferHead];
-//
-//		if(tcpBufferHead >= payload_len)
-//		{
-//			receiveState = 3;
-//			esp8266ClearBuffer();
-//			break;
-//		}
-//
-//		if(tcpBufferHead >= TCP_RX_BUFFER_LEN){
-//			esp8266ClearBuffer();
-//			esp8266ClearTcpBuffer();
-//			receiveState = 0;
-//		}
-//		break;
-//	}
-//	default:
-//		break;
-//	}
-//	bufferHead++;
-//}
-
 /* Check for buffer overflow */
 uint8_t ESP8266_CheckOverflow(void){
 	if((bufferHead - esp8266RxBuffer) >= ESP8266_RX_BUFFER_LEN)	{
@@ -891,83 +564,12 @@ uint8_t ESP8266_CheckTCPOverflow(void){
 	return ESP_OK;
 }
 
-//void ESP8266_RxCallBack(char c)
-//{
-//	taskENTER_CRITICAL_FROM_ISR();
-//
-//	ESP8266_CheckOverflow();
-//	*bufferHead = c;
-//
-//	switch(receiveState)
-//	{
-//	case 0:
-//	{
-//		if(strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED) != NULL)	//"+IPD,"
-//		{
-//			receiveState = 1;
-//		}
-//		break;
-//	}
-//	case 1:
-//	{
-//		if(*bufferHead != ':'){
-//			break;
-//		}else{
-//			esp8266ClearTcpBuffer();
-//
-//			char *p;
-//			p = strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED);	//"+IPD,"
-//			char strlen[3];
-//
-//			memcpy(strlen, p+7, (strstr((const char *)esp8266RxBuffer, ":") - (p+7)));
-//
-//			int16_t len;
-//			len = (atoi(strlen));		// в первой версии len = (atoi(strlen) - 1);
-//			if((len >= 0) && (len <= TCP_RX_BUFFER_LEN)){
-//				payload_len = len;
-//				receiveState = 2;
-//			}else{
-//				receiveState = 0;
-//				payload_len = 0;
-//
-//				esp8266ClearBuffer();
-//			}
-//		}
-//		break;
-//	}
-//	case 2:
-//	{
-//		*tcpBufferHead = *bufferHead;
-//		tcpBufferHead++;
-//
-//		if((tcpBufferHead - tcpRxBuffer) >= payload_len)
-//		{
-//			receiveState = 3;
-//			esp8266ClearBuffer();
-//			break;
-//		}
-//
-//		if((tcpBufferHead - tcpRxBuffer) >= TCP_RX_BUFFER_LEN){
-//			esp8266ClearBuffer();
-//			esp8266ClearTcpBuffer();
-//			receiveState = 0;
-//		}
-//		break;
-//	}
-//	default:
-//		break;
-//	}
-//	bufferHead++;
-//
-//	taskEXIT_CRITICAL_FROM_ISR();
-//}
-
-void ESP8266_RxCallBack(char c)
+void esp8266RxCallBack(char c)
 {
 	ESP8266_CheckOverflow();
 	*bufferHead = c;
 
-//	PROCESS_TCP:
+	PROCESS_TCP:
 	switch(receiveState)
 	{
 	case ESP_WAIT_IPD:
@@ -983,20 +585,18 @@ void ESP8266_RxCallBack(char c)
 		if(*bufferHead != ':'){  	// when entire header received "+IPD,<linkID>,<len>:" // *tcpDataProcPtr
 			break;
 		}else{
+			esp8266_result result = ESP_ERROR;
 			char *ptr = NULL;
 			ptr = strstr((const char *)esp8266RxBuffer, RESPONSE_TCP_RECEIVED);	// get pointer to '+'
 			ptr += 5;	// shift pointer to the first byte after "+IPD,"
 			uint8_t connection_number = 0;
-			uint8_t cnt = 0; // bytes parsed as decimal number (in this case should be always 1)
-			connection_number = ParseNumber(ptr, &cnt);
-			if((connection_number < 5) && (cnt == 1)){
-				ptr += cnt;
-				cnt = 0;
+			connection_number = getDecNum(ptr, &ptr, 5, &result);
+			if((result == ESP_OK) && (connection_number < 5)){
 				current_connection = connection_number;
 			}
-			int32_t len = 0;
-			len = ParseNumber(ptr, &cnt);
-			if((len >= 0) && (len < TCP_RX_BUFFER_LEN)){
+			int32_t len = 0; // paload length
+			len = getDecNum(ptr, &ptr, 5, &result);
+			if((result == ESP_OK) && (len >= 0) && (len < TCP_RX_BUFFER_LEN)){
 				payload_len = len;
 				esp8266ClearTcpBuffer();
 				receiveState = ESP_RECEIVE_TCP;
@@ -1017,8 +617,8 @@ void ESP8266_RxCallBack(char c)
 			if((tcpBufferHead - tcpRxBuffer) >= payload_len)
 			{
 				receiveState = ESP_TCP_RECEPTION_DONE;
-//				tcpDataProcPtr = bufferHead;
-//				unprocessed_bytes = 0;
+				tcpDataProcPtr = bufferHead;
+				unprocessed_bytes = 0;
 				esp8266ClearBuffer();
 			}
 		}
@@ -1031,13 +631,13 @@ void ESP8266_RxCallBack(char c)
 		break;
 	}
 
-//	if(receiveState != ESP_TCP_RECEPTION_DONE){
-//		tcpDataProcPtr = (bufferHead - unprocessed_bytes);
-//		if(tcpDataProcPtr != bufferHead){
-//			unprocessed_bytes--;
-//			goto PROCESS_TCP;
-//		}
-//	}
+	if(receiveState != ESP_TCP_RECEPTION_DONE){
+		tcpDataProcPtr = (bufferHead - unprocessed_bytes);
+		if(tcpDataProcPtr != bufferHead){
+			unprocessed_bytes--;
+			goto PROCESS_TCP;
+		}
+	}
 
 	bufferHead++;
 }
@@ -1054,7 +654,7 @@ void USART2_IRQHandler(void)
     {
     	USART_ClearITPendingBit(USART2, USART_IT_RXNE);
     	char c = (char)USART_ReceiveData(USART2) & 0xff;
-    	ESP8266_RxCallBack(c);
+    	esp8266RxCallBack(c);
     }
 
     xSemaphoreGiveFromISR(xUsart2RxInterruptSemaphore, &xHigherPriorityTaskWoken);

@@ -51,7 +51,7 @@
 #include "Tasks/vTaskSHT11.h"
 #include "Tasks/vTaskDebug.h"
 #include "Tasks/vTaskBlinker.h"
-#include "Tasks/vTaskESP.h"
 #include "Tasks/vTaskSDcard.h"
+#include "Tasks/vTaskESP.h"
 
 #endif /* INC_H_ */

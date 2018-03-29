@@ -14,19 +14,10 @@ MACRO SECTION
 #define BUTTONS_TASK_PERIOD 			10
 #define BUTTONS_COUNT 					4
 
-//#define BOARD_BUTTON_SERVICE			0
-//#define BOARD_BUTTON_OK 				1
-//#define BOARD_BUTTON_PLUS 				2
-//#define BOARD_BUTTON_MINUS 				3
-//#define BOARD_BUTTON_BACK 				4
-
 #define BOARD_BUTTON_OK 				0
 #define BOARD_BUTTON_PLUS 				1
 #define BOARD_BUTTON_MINUS 				2
 #define BOARD_BUTTON_BACK 				3
-
-//#define BOARD_BUTTON_SERVICE_PIN		GPIO_Pin_11
-//#define BOARD_BUTTON_SERVICE_PORT		GPIOB
 
 #define BOARD_BUTTON_OK_PIN				GPIO_Pin_1		// white
 #define BOARD_BUTTON_OK_PORT			GPIOA
@@ -66,24 +57,10 @@ typedef struct _BUTTON{
 
 uint32_t pressed_time = 0;
 BUTTON_bt btn_sta[BUTTONS_COUNT];
-//typedef struct _button_state{
-//	uint8_t current;		// previous button state
-//	uint8_t previous;		// current button state
-//} button_state_t;
-//
-//button_state_t 	board_btn_state[BOARD_BTN_CNT];
 
 /*-----------------------------------------------------------------------------
 HEADER SECTION
 -----------------------------------------------------------------------------*/
-//void initBoardButtons(void);
-//void serviceButtonPressedHandle(void);
-//void okButtonPressedHandle(void);
-//void plusButtonPressedHandle(void);
-//void minusButtonPressedHandle(void);
-//void backButtonPressedHandle(void);
-//void updateButton(uint8_t button, GPIO_TypeDef* port, uint16_t pin, uint16_t *period, void (*handle)(void));
-//void vButtonsCheck(void *pvParameters);
 void initButtons(void);
 void okButtonPressedHandle(void);
 void plusButtonPressedHandle(void);
@@ -95,39 +72,6 @@ void vButtonsCheck(void *pvParameters);
 /*-----------------------------------------------------------------------------
 IMPLEMENTATION SECTION
 -----------------------------------------------------------------------------*/
-
-//void initBoardButtons(void)
-//{
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |
-//							RCC_APB2Periph_GPIOB |
-//							RCC_APB2Periph_GPIOC,
-//							ENABLE);
-//
-//	GPIO_InitTypeDef gpio;
-//	GPIO_StructInit(&gpio);
-//	gpio.GPIO_Mode = GPIO_Mode_IPD;
-//	gpio.GPIO_Speed = GPIO_Speed_2MHz;
-//
-//	gpio.GPIO_Pin = BOARD_BUTTON_SERVICE_PIN;
-//	GPIO_Init(BOARD_BUTTON_SERVICE_PORT, &gpio);
-//
-//	gpio.GPIO_Pin = BOARD_BUTTON_OK_PIN;
-//	GPIO_Init(BOARD_BUTTON_OK_PORT, &gpio);
-//
-//	gpio.GPIO_Pin = BOARD_BUTTON_PLUS_PIN;
-//	GPIO_Init(BOARD_BUTTON_PLUS_PORT, &gpio);
-//
-//	gpio.GPIO_Pin = BOARD_BUTTON_MINUS_PIN;
-//	GPIO_Init(BOARD_BUTTON_MINUS_PORT, &gpio);
-//
-//	gpio.GPIO_Pin = BOARD_BUTTON_BACK_PIN;
-//	GPIO_Init(BOARD_BUTTON_BACK_PORT, &gpio);
-//
-//	for(uint8_t i = 0; i < BOARD_BTN_CNT; i++){
-//		board_btn_state[i].previous = 0;
-//		board_btn_state[i].current = 0;
-//	}
-//}
 
 void initButtons(void)
 {
@@ -239,27 +183,6 @@ void buttonStateUpdate(BUTTON_bt *btn_sta, void (*handle)(void))
 	}
 }
 
-//void updateButton(uint8_t button, GPIO_TypeDef* port, uint16_t pin, uint16_t *period, void (*handle)(void))
-//{
-//	uint16_t _period;
-//	_period = *period;
-//
-//	board_btn_state[button].previous = board_btn_state[button].current;
-//	board_btn_state[button].current = GPIO_ReadInputDataBit(port, pin);
-//
-//	if((board_btn_state[button].current != 0) &&
-//			(board_btn_state[button].current != board_btn_state[button].previous)){
-//		_period = 400;		// change checking period (debounce)
-//		handle();
-//	}else if((board_btn_state[button].current != 0) &&
-//			(board_btn_state[button].current == board_btn_state[button].previous)){
-//		_period = 200;		// change checking period (debounce)
-//		handle();
-//	}
-//
-//	*period = _period;
-//}
-
 /**
  * OS Task: Button check
  *
@@ -268,21 +191,6 @@ void buttonStateUpdate(BUTTON_bt *btn_sta, void (*handle)(void))
  */
 void vButtonsCheck(void *pvParameters)
 {
-//	TickType_t pxPreviousWakeTime;
-//	uint16_t period = 15;
-//
-//	pxPreviousWakeTime = xTaskGetTickCount();
-//	do{
-//		period = 15;
-//		updateButton(BOARD_BUTTON_SERVICE, 	BOARD_BUTTON_SERVICE_PORT, 	BOARD_BUTTON_SERVICE_PIN, 	&period, serviceButtonPressedHandle);
-//		updateButton(BOARD_BUTTON_OK, 		BOARD_BUTTON_OK_PORT, 		BOARD_BUTTON_OK_PIN, 		&period, okButtonPressedHandle);
-//		updateButton(BOARD_BUTTON_PLUS, 	BOARD_BUTTON_PLUS_PORT, 	BOARD_BUTTON_PLUS_PIN, 		&period, plusButtonPressedHandle);
-//		updateButton(BOARD_BUTTON_MINUS, 	BOARD_BUTTON_MINUS_PORT, 	BOARD_BUTTON_MINUS_PIN, 	&period, minusButtonPressedHandle);
-//		updateButton(BOARD_BUTTON_BACK, 	BOARD_BUTTON_BACK_PORT, 	BOARD_BUTTON_BACK_PIN, 		&period, backButtonPressedHandle);
-//
-//		vTaskDelayUntil(&pxPreviousWakeTime, period);
-//	}while(1);
-//	vTaskDelete(NULL);
 	TickType_t pxPreviousWakeTime;
 
 	initButtons();
